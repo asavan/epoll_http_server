@@ -6,9 +6,7 @@
 #include "inet_address.h"
 #include "idisposable.h"
 
-#include <functional>
 #include <memory>
-
 #include <vector>
 
 namespace Network
@@ -19,7 +17,7 @@ namespace Network
     : private Common::NonCopyable
   {
   public:
-    TCPServer(const InetAddress &locAddr, int backlog, int maxThreadsCount,
+    TCPServer(InetAddressPtr locAddr, int backlog, int maxThreadsCount,
               int maxConnectionsCount, UserSessionCreator sessionCreator);
     
   private:

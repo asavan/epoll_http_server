@@ -29,7 +29,7 @@ int main(int argc, const char **argv)
     // Server:127.0.0.1 Port:5555 Backlog:1000 Threads:4 Connections:1000 Root:./ DefaultPage:index.html Corking:1
     Common::CommandLine CmdLine(argc, argv);
     
-    Network::TCPServer Srv(*Network::InetAddressV4::CreateFromString(
+    Network::TCPServer Srv(Network::InetAddressV4::CreateFromString(
         CmdLine.GetStrParameter(ServerAddr),
         CmdLine.GetParameter<unsigned short>(ServerPort)),
       CmdLine.GetParameter<unsigned>(MaxBacklog),

@@ -25,6 +25,7 @@ namespace Network
       {
         Ctrl = ctrl;
         Ctrl->GetSocketTuner().SetCorking(UseCorking);
+		Common::Log::GetLogInst() << "init sess end" << std::endl;
       }
       
       void HttpUserSession::Done()
@@ -59,6 +60,7 @@ namespace Network
             while (Response.Send());
           }
         } SendErrorPage;
+		Common::Log::GetLogInst() << "OnRecvData begin" << std::endl;
         try
         {
           AssignData(buf, bytes);
@@ -66,18 +68,21 @@ namespace Network
         }
         catch (const HttpRequestHeaderException &e)
         {
+			Common::Log::GetLogInst() << e.what() << std::endl;
           Ctrl->MarkMeForClose();
           SendErrorPage(Ctrl, static_cast<HttpStatusCode>(e.GetCode()));
           throw;
         }
         catch (const HttpSrcFileHolderException &e)
         {
+			Common::Log::GetLogInst() << e.what() << std::endl;
           Ctrl->MarkMeForClose();
           SendErrorPage(Ctrl, static_cast<HttpStatusCode>(e.GetCode()));
           throw;
         }
-        catch (const std::exception &)
+        catch (const std::exception& e)
         {
+			Common::Log::GetLogInst() << e.what() << std::endl;
           Ctrl->MarkMeForClose();
           SendErrorPage(Ctrl, statInternalServerError);
           throw;
@@ -86,6 +91,7 @@ namespace Network
       
       void HttpUserSession::OnIdle()
       {
+		  Common::Log::GetLogInst() << "OnIdle begin" << std::endl;
         try
         {
           if (FileSender.get())
@@ -107,6 +113,7 @@ namespace Network
         }
         catch (const std::exception &e)
         {
+			Common::Log::GetLogInst() << e.what() << std::endl;
           Ctrl->MarkMeForClose();
           Common::Log::GetLogInst() << e.what();
         }
@@ -114,6 +121,7 @@ namespace Network
       
       void HttpUserSession::ProcessRequest(const HttpRequestHeader &header, void const *buf, unsigned bytes)
       {
+		  Common::Log::GetLogInst() << "Process" << std::endl;
         switch (header.GetMethod())
         {
         case HttpRequestHeader::mtdGet :

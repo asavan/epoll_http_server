@@ -21,8 +21,8 @@ namespace Network
     try
     {
       Select(&func, waitTimeout);
-      if (idleFunc.get())
-        (*idleFunc.get())();
+      if (idleFunc)
+        (*idleFunc)();
     }
     catch (const std::exception &e)
     {

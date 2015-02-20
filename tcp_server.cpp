@@ -6,12 +6,10 @@
 
 #include "queue.h"
 #include "client_item.h"
+
 #include <mutex>
-
-
 #include <map>
-
-// #include <assert.h>
+#include <iostream>
 
 namespace Network
 {
@@ -27,10 +25,10 @@ namespace Network
       , public Common::IDisposable
     {
     public:
-      ListenThread(const InetAddress &locAddr, int backlog,
+      ListenThread(InetAddressPtr locAddr, int backlog,
                    ClientItemQueuePtr acceptedClients,
                    UserSessionCreator sessionCreator)
-        : TCPServerSocket(locAddr, backlog)
+				   : TCPServerSocket(std::move(locAddr), backlog)
         , AcceptedClients(acceptedClients)
         , SessionCreator(sessionCreator)
         , Selector(1, WaitTimeout, std::bind(&ListenThread::OnSelect,
@@ -62,10 +60,11 @@ namespace Network
             throw std::invalid_argument("Empty destQueue pointer");
           
           AcceptedClients->Push(std::move(Client));
+		  Common::Log::GetLogInst() << "pushed" << std::endl;
         }
         catch (const std::exception &e)
         {
-          Common::Log::GetLogInst() << e.what();
+          Common::Log::GetLogInst() << e.what() << std::endl;
         }
       }
     };
@@ -99,9 +98,11 @@ namespace Network
       {
         try
         {
-          ClientPool::iterator Iter = Clients.find(handle);
-          if (Iter == Clients.end())
+          auto Iter = Clients.find(handle);
+		  if (Iter == Clients.end())
+		  {
             return;
+		  }
           switch (selectType)
           {
           case Network::ISelector::stRead :
@@ -116,17 +117,17 @@ namespace Network
                 throw;
               }
             }
-            return;
+            break;
           case Network::ISelector::stClose :
               RemoveClient(Iter);
-            return;
+            break;
           default :
             break;
           }
         }
         catch (const std::exception &e)
         {
-          Common::Log::GetLogInst() << e.what();
+			Common::Log::GetLogInst() << e.what() << std::endl;
         }
       }
       
@@ -137,33 +138,44 @@ namespace Network
           for (ClientPool::iterator i = Clients.begin() ; i != Clients.end() ; )
           {
             if (i->second->CanClose())
+			{
               RemoveClient(i++);
+			}
             else
             {
               try
               {
                 i->second->OnIdle();
-                if (i->second->CanClose())
+				if (i->second->CanClose())
+				{
                   RemoveClient(i++);
+				}
                 else
+				{
                   ++i;
+				}
               }
-              catch (std::exception const &e)
+              catch (const std::exception &e)
               {
-                Clients.erase(i++);
-                Common::Log::GetLogInst() << e.what();
+				  Common::Log::GetLogInst() << e.what()<< std::endl;
+                  Clients.erase(i++);
+				
               }
             }
           }
           
           if (Clients.size() >= MaxConnections)
-            return;
-          
-		  AcceptedClients->Pop();
-		  
+		  {
+			Common::Log::GetLogInst() << "too many clients" << std::endl;
+			return;
+		  }
+          		  	  
           std::unique_ptr<ClientItem> Client = AcceptedClients->Pop();
           if (!Client)
+		  {
+			// Common::Log::GetLogInst() << "wrong client" << std::endl;
             return;
+		  }
           
           Selector.AddSocket(Client->GetHandle(), Network::ISelector::stRead | Network::ISelector::stClose);
 		  SocketHandle h = Client->GetHandle();
@@ -173,7 +185,7 @@ namespace Network
         }
         catch (const std::exception &e)
         {
-          Common::Log::GetLogInst() << e.what();
+			Common::Log::GetLogInst() << e.what() << std::endl;
         }
       }
       
@@ -193,7 +205,7 @@ namespace Network
 
   }
   
-  TCPServer::TCPServer(const InetAddress &locAddr, int backlog, int maxThreadsCount,
+  TCPServer::TCPServer(InetAddressPtr locAddr, int backlog, int maxThreadsCount,
             int maxConnectionsCount, UserSessionCreator sessionCreator)   
   {
 	Private::ClientItemQueuePtr AcceptedItems(new Private::ClientItemQueue(backlog));
@@ -208,7 +220,7 @@ namespace Network
 	  }
       Threads.push_back(IDisposablePtr(new Private::WorkerThread(maxEventsCount, AcceptedItems)));
     }
-    Threads.push_back(IDisposablePtr(new Private::ListenThread(locAddr, backlog, AcceptedItems, sessionCreator)));
+	Threads.push_back(IDisposablePtr(new Private::ListenThread(std::move(locAddr), backlog, AcceptedItems, sessionCreator)));
   }
 
 }

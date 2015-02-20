@@ -1,3 +1,4 @@
+#include "logger.h"
 #include "client_item.h"
 #include "io_helper.h"
 
@@ -28,6 +29,7 @@ namespace Network
   
   void ClientItem::RecvData()
   {
+	  Common::Log::GetLogInst() << "RecvData" << std::endl;
     if (MarkedForClose)
       return;
     IOHelper IO(holder_->GetHandle());

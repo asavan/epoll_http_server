@@ -1,6 +1,7 @@
 #include "inet_address_v4.h"
 
 #include <arpa/inet.h>
+#include <iostream>
 
 namespace Network
 {

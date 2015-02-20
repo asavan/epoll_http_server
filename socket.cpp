@@ -14,9 +14,10 @@ namespace Network
   {
   }
   
-  void Socket::Bind(const InetAddress &addr)
+  void Socket::Bind(InetAddressPtr addr)
   {
-    if (bind(GetHandle(), addr.GetAddr(), addr.GetSize()) == -1)
+	addr_ = std::move(addr);
+    if (bind(GetHandle(), addr_->GetAddr(), addr_->GetSize()) == -1)
       throw SocketException("Failed to bind socket", errno);
   }
   

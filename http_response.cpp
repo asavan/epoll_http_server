@@ -2,6 +2,7 @@
 #include "common_utils.h"
 
 #include "iconnection_ctrl.h"
+#include "logger.h"
 
 #include <sstream>
 #include <iomanip>
@@ -36,6 +37,7 @@ namespace Network
       
       bool HttpResponse::Send()
       {
+		  Common::Log::GetLogInst() << "send begin" << std::endl;
         if (Buffer.empty())
           return false;
         unsigned Bytes = Buffer.size();
@@ -83,6 +85,7 @@ namespace Network
       
       void HttpResponse::CreateResponseHeader(std::string *response) const
       {
+
         std::string ErrorPage;
         if (Status != statOK)
         {

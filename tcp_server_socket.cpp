@@ -4,12 +4,12 @@
 namespace Network
 {
 
-  TCPServerSocket::TCPServerSocket(const InetAddress &locAddr, int backlog)
+  TCPServerSocket::TCPServerSocket(InetAddressPtr locAddr, int backlog)
     : Socket(Socket::Tcp, true)
   {
     SocketTuner Tuner(GetHandle());
     Tuner.SetReuseAddr(true);
-    Bind(locAddr);
+	Bind(std::move(locAddr));
     Listen(backlog);
   }
 

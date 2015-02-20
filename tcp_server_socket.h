@@ -11,7 +11,7 @@ namespace Network
     : protected Socket
   {
   public:
-    TCPServerSocket(const InetAddress &locAddr, int backlog);
+    TCPServerSocket(InetAddressPtr locAddr, int backlog);
   };
 
 }
