@@ -27,12 +27,13 @@ namespace Network
       public:
         HttpUserSession(const std::string &rootDir, const std::string &defaultPage, bool useCorking);
         virtual void Init(IConnectionCtrl *ctrl);
-        virtual void Done();
-        virtual bool IsExpiredSession(std::time_t lastActionTime) const;
+        
         virtual unsigned GetMaxBufSizeForRead() const;
         virtual void OnRecvData(void const *buf, unsigned bytes);
         virtual void OnIdle();
         virtual void ProcessRequest(const HttpRequestHeader &header, void const *buf, unsigned bytes);
+	  protected:
+		virtual bool IsExpiredSession(std::time_t lastActionTime) const;
         
       private:
         enum { MaxBufSizeForRead = 4096 };

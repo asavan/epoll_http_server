@@ -21,7 +21,7 @@ namespace Network
   {
   public:
     ClientItem(SocketHolderPtr holder, InetAddressPtr addr, IUserSessionPtr userSession);
-    ~ClientItem();
+    
     
     bool CanClose() const;
     void RecvData();

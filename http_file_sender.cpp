@@ -1,3 +1,4 @@
+#include "logger.h"
 #include "http_file_sender.h"
 #include "iconnection_ctrl.h"
 
@@ -18,6 +19,7 @@ namespace Network
         , HeaderHasBeenSent(false)
         , FileOffset(0)
       {
+		Common::Log::GetLogInst() << "resourceName " << resourceName << std::endl;
         SetResourceName(resourceName);
         SetContentLength(File.GetFileSize());
       }
@@ -27,13 +29,20 @@ namespace Network
         if (!HeaderHasBeenSent)
           HeaderHasBeenSent = !HttpResponse::Send();
         unsigned Bytes = File.GetFileSize() - FileOffset;
-        if (!Bytes)
+		if (!Bytes)
+		{
           return false;
+		}
+		Common::Log::GetLogInst() << "FileOffset " << FileOffset << std::endl;
         if (GetCtrl()->SendFile(File.GetHandle(), FileOffset, &Bytes))
+		{
           return false;
+		}
         FileOffset += Bytes;
         if (FileOffset >= File.GetFileSize())
+		{
           return false;
+		}
         return true;
       }
       

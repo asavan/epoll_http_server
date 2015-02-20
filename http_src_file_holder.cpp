@@ -1,6 +1,6 @@
 #include "http_src_file_holder.h"
 #include "http_status_code.h"
-
+#include "logger.h"
 namespace Network
 {
   

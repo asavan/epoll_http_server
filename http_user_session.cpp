@@ -25,17 +25,7 @@ namespace Network
       {
         Ctrl = ctrl;
         Ctrl->GetSocketTuner().SetCorking(UseCorking);
-		Common::Log::GetLogInst() << "init sess end" << std::endl;
-      }
-      
-      void HttpUserSession::Done()
-      {
-        if (FileSender)
-          FileSender.reset();
-        if (HeadResponse)
-          HeadResponse.reset();
-        Ctrl = 0;
-      }
+      }            
       
       bool HttpUserSession::IsExpiredSession(std::time_t lastActionTime) const
       {

@@ -1,6 +1,7 @@
 #include "http_request_reader.h"
 #include "exceptions.h"
 #include <memory>
+#include <strings.h>
 
 namespace Network
 {

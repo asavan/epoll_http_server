@@ -15,7 +15,6 @@ namespace Network
     {
     }
     virtual void Init(IConnectionCtrl *ctrl) = 0;
-    virtual void Done() = 0;
     virtual unsigned GetMaxBufSizeForRead() const = 0;
     virtual bool IsExpiredSession(std::time_t lastActionTime) const = 0;
     virtual void OnRecvData(void const *buf, unsigned bytes) = 0;

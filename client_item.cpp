@@ -10,17 +10,14 @@ namespace Network
 	  holder_(std::move(holder))
     , SessionLastActionTime(std::time(0))
     , MarkedForClose(false)
-    , UserSession(userSession)
+	, UserSession(userSession)
     , BufferSize(userSession->GetMaxBufSizeForRead())
     , RecvBuffer(new char [BufferSize])
   {
+	  Common::Log::GetLogInst() << "Init client" << std::endl;
     UserSession->Init(this);
-  }
-  
-  ClientItem::~ClientItem()
-  {
-    UserSession->Done();
-  }
+	Common::Log::GetLogInst() << "end Init client" << std::endl;
+  }    
   
   bool ClientItem::CanClose() const
   {
