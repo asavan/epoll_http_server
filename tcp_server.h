@@ -11,20 +11,20 @@
 
 namespace Network
 {  
-  typedef std::function<IUserSessionPtr ()> UserSessionCreator;
+  // typedef std::function<IUserSessionPtrU ()> UserSessionCreator;
 
   class TCPServer
     : private Common::NonCopyable
   {
   public:
     TCPServer(InetAddressPtr locAddr, int backlog, int maxThreadsCount,
-              int maxConnectionsCount, UserSessionCreator sessionCreator);
+		int maxConnectionsCount, const std::string& rootDir, const std::string& defaultPage, bool useCorking);
     
   private:
     typedef std::unique_ptr<Common::IDisposable> IDisposablePtr;
     typedef std::vector<IDisposablePtr> IDisposablePool;
     
-    IDisposablePool Threads;
+    IDisposablePool Threads;	
   };
   
 }

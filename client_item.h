@@ -20,7 +20,7 @@ namespace Network
 	private Common::NonCopyable
   {
   public:
-    ClientItem(SocketHolderPtr holder, InetAddressPtr addr, IUserSessionPtr userSession);
+    ClientItem(SocketHolderPtr holder, InetAddressPtr addr, IUserSessionPtrU userSession);
     
     
     bool CanClose() const;
@@ -34,7 +34,7 @@ namespace Network
     virtual void UpdateSessionTime();
     virtual bool SendData(void const *buf, unsigned *bytes);
     virtual bool SendFile(int fileHandle, unsigned offset, unsigned *bytes);
-    virtual InetAddress const& GetAddress() const;
+    // virtual InetAddress const& GetAddress() const;
     virtual SocketTuner GetSocketTuner() const;
     
   private:
@@ -42,7 +42,7 @@ namespace Network
 	SocketHolderPtr holder_;
     std::time_t SessionLastActionTime;
     bool MarkedForClose;
-    IUserSessionPtr UserSession;
+    IUserSessionPtrU UserSession;
     unsigned BufferSize;
     std::unique_ptr<char> RecvBuffer;
   };

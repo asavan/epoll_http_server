@@ -6,7 +6,7 @@
 #include "command_line.h"
 #include "inet_address_v4.h"
 #include "tcp_server.h"
-#include "http_user_session.h"
+
 
 int main(int argc, const char **argv)
 {
@@ -30,15 +30,14 @@ int main(int argc, const char **argv)
     Common::CommandLine CmdLine(argc, argv);
     
     Network::TCPServer Srv(Network::InetAddressV4::CreateFromString(
-        CmdLine.GetStrParameter(ServerAddr),
-        CmdLine.GetParameter<unsigned short>(ServerPort)),
+      CmdLine.GetStrParameter(ServerAddr),
+      CmdLine.GetParameter<unsigned short>(ServerPort)),
       CmdLine.GetParameter<unsigned>(MaxBacklog),
       CmdLine.GetParameter<unsigned>(ThreadsCount),
-      CmdLine.GetParameter<unsigned>(MaxConnections),
-      std::bind(&Network::Proto::Http::CreateHttpUserSession,
-        CmdLine.GetStrParameter(RootDir),
-        CmdLine.GetStrParameter(DefaultPage),
-        !!CmdLine.GetParameter<unsigned>(UseCorking)));
+      CmdLine.GetParameter<unsigned>(MaxConnections),     
+      CmdLine.GetStrParameter(RootDir),
+      CmdLine.GetStrParameter(DefaultPage),
+      !!CmdLine.GetParameter<unsigned>(UseCorking));
     std::cin.get();
   }
   catch (const std::exception &e)

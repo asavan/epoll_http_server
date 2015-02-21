@@ -146,11 +146,11 @@ namespace Network
         return Res;
       }
 
-      IUserSessionPtr CreateHttpUserSession(const std::string &rootDir,
+      IUserSessionPtrU CreateHttpUserSession(const std::string &rootDir,
                                             const std::string &defaultPage,
                                             bool useCorking)
       {
-        return IUserSessionPtr(new HttpUserSession(rootDir, defaultPage, useCorking));
+        return IUserSessionPtrU(new HttpUserSession(rootDir, defaultPage, useCorking));
       }
       
     }

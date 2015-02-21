@@ -48,7 +48,7 @@ namespace Network
         std::string CreateResourceName(const std::string &resource) const;
       };
       
-      IUserSessionPtr CreateHttpUserSession(const std::string &rootDir,
+      IUserSessionPtrU CreateHttpUserSession(const std::string &rootDir,
         const std::string &defaultPage, bool useCorking);
       
     }

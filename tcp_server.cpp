@@ -7,6 +7,8 @@
 #include "queue.h"
 #include "client_item.h"
 
+#include "http_user_session.h"
+
 #include <mutex>
 #include <map>
 #include <iostream>
@@ -27,12 +29,13 @@ namespace Network
     public:
       ListenThread(InetAddressPtr locAddr, int backlog,
                    ClientItemQueuePtr acceptedClients,
-                   UserSessionCreator sessionCreator)
+                   const std::string& rootDir, const std::string& defaultPage, bool useCorking)
 				   : TCPServerSocket(std::move(locAddr), backlog)
         , AcceptedClients(acceptedClients)
-        , SessionCreator(sessionCreator)
+        // , SessionCreator(sessionCreator)
         , Selector(1, WaitTimeout, std::bind(&ListenThread::OnSelect,
-            this, std::placeholders::_1, std::placeholders::_2))
+            this, std::placeholders::_1, std::placeholders::_2)),
+			RootDir(rootDir), DefaultPage(defaultPage), UseCorking(useCorking)
       {
         Selector.AddSocket(GetHandle(), Network::ISelector::stRead);
       }
@@ -40,26 +43,32 @@ namespace Network
     private:
       enum { WaitTimeout = 20 };
       ClientItemQueuePtr AcceptedClients;
-      UserSessionCreator SessionCreator;
+      // UserSessionCreator SessionCreator;
       SelectorThread Selector;
+
+		std::string RootDir;
+		std::string DefaultPage;
+		bool UseCorking;
       
       void OnSelect(SocketHandle handle, Network::ISelector::SelectType selectType)
       {
         try
         {
-          
+			Common::Log::GetLogInst() << "start" << std::endl;
+			{
           sockaddr Addr = { 0 };
           socklen_t AddrSize = sizeof(Addr);
                     
 		  SocketHolderPtr holder = Accept(true, &Addr, &AddrSize);
           ClientItemPtr Client(new ClientItem(std::move(holder),
             InetAddress::CreateFromSockAddr(&Addr, AddrSize),
-            SessionCreator()));
+            Network::Proto::Http::CreateHttpUserSession(RootDir, DefaultPage, UseCorking)));
   
           if (!AcceptedClients)
             throw std::invalid_argument("Empty destQueue pointer");
           
           AcceptedClients->Push(std::move(Client));
+			}
 		  Common::Log::GetLogInst() << "pushed" << std::endl;
         }
         catch (const std::exception &e)
@@ -206,7 +215,7 @@ namespace Network
   }
   
   TCPServer::TCPServer(InetAddressPtr locAddr, int backlog, int maxThreadsCount,
-            int maxConnectionsCount, UserSessionCreator sessionCreator)   
+	  int maxConnectionsCount, const std::string& rootDir, const std::string& defaultPage, bool useCorking)
   {
 	Private::ClientItemQueuePtr AcceptedItems(new Private::ClientItemQueue(backlog));
     int EventsCount = maxConnectionsCount / maxThreadsCount;
@@ -220,7 +229,7 @@ namespace Network
 	  }
       Threads.push_back(IDisposablePtr(new Private::WorkerThread(maxEventsCount, AcceptedItems)));
     }
-	Threads.push_back(IDisposablePtr(new Private::ListenThread(std::move(locAddr), backlog, AcceptedItems, sessionCreator)));
+	Threads.push_back(IDisposablePtr(new Private::ListenThread(std::move(locAddr), backlog, AcceptedItems, rootDir, defaultPage, useCorking)));
   }
 
 }

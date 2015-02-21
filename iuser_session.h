@@ -21,7 +21,7 @@ namespace Network
     virtual void OnIdle() = 0;
   };
 
-  typedef std::shared_ptr<IUserSession> IUserSessionPtr;
+  typedef std::unique_ptr<IUserSession> IUserSessionPtrU;
 
 }
 
