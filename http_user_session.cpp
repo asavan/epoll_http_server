@@ -64,14 +64,14 @@ namespace Network
         }
         catch (const HttpSrcFileHolderException &e)
         {
-			Common::Log::GetLogInst() << e.what() << std::endl;
+			// Common::Log::GetLogInst() << e.what() << std::endl;
           Ctrl->MarkMeForClose();
           SendErrorPage(Ctrl, static_cast<HttpStatusCode>(e.GetCode()));
           throw;
         }
         catch (const std::exception& e)
         {
-			Common::Log::GetLogInst() << e.what() << std::endl;
+			Common::Log::GetLogInst() <<__FILE__ << __LINE__ <<e.what() << std::endl;
           Ctrl->MarkMeForClose();
           SendErrorPage(Ctrl, statInternalServerError);
           throw;
@@ -82,7 +82,7 @@ namespace Network
       {		  
         try
         {
-          if (FileSender.get())
+          if (FileSender)
           {
             if (!FileSender->Send())
             {
@@ -90,7 +90,7 @@ namespace Network
               Ctrl->MarkMeForClose();
             }
           }
-          if (HeadResponse.get())
+          if (HeadResponse)
           {
             if (!HeadResponse->Send())
             {
@@ -101,15 +101,14 @@ namespace Network
         }
         catch (const std::exception &e)
         {
-			Common::Log::GetLogInst() << e.what() << std::endl;
-          Ctrl->MarkMeForClose();
-          Common::Log::GetLogInst() << e.what();
+		  Common::Log::GetLogInst() << "555 " <<e.what() << std::endl;
+          Ctrl->MarkMeForClose();          
         }
       }
       
       void HttpUserSession::ProcessRequest(const HttpRequestHeader &header, void const *buf, unsigned bytes)
       {
-		  // Common::Log::GetLogInst() << "Process" << std::endl;
+		  Common::Log::GetLogInst() << "Process" << std::endl;
         switch (header.GetMethod())
         {
         case HttpRequestHeader::mtdGet :
@@ -141,6 +140,7 @@ namespace Network
         }
         else
           Res += resource;
+		Common::Log::GetLogInst() << "CreateResourceName " << resource << std::endl;
         return Res;
       }
 

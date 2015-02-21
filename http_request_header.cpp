@@ -1,5 +1,5 @@
 #include "http_request_header.h"
-
+#include "logger.h"
 #include <stdlib.h>
 
 namespace Network
@@ -13,11 +13,12 @@ namespace Network
 
       char const HttpRequestHeader::ContentLengthPrm[] = "Content-Length";
 
-      HttpRequestHeader::HttpRequestHeader(Method mtd, const std::string &resource)
+      HttpRequestHeader::HttpRequestHeader(Method mtd, const std::string &&resource)
         : Mtd(mtd)
-        , Resource(resource)
+		, Resource(std::move(resource))
         , ContentLength(-1)
       {
+		  Common::Log::GetLogInst() << "HttpRequestHeader " << resource << std::endl;
       }
       
       HttpRequestHeader::Method HttpRequestHeader::GetMethod() const

@@ -3,6 +3,7 @@
 
 #include "exceptions.h"
 #include "http_status_code.h"
+#include "non_copyable.h"
 
 #include <string>
 #include <map>
@@ -18,20 +19,20 @@ namespace Network
       
       DECLARE_RUNTIME_EXCEPTION(HttpRequestHeader)
       
-      class HttpRequestHeader
+      class HttpRequestHeader: private Common::NonCopyable
       {
       public:
         enum Method { mtdGet, mtdHead };
         
         static char const ContentLengthPrm[];
         
-        HttpRequestHeader(Method mtd, std::string const &resource);
+        HttpRequestHeader(Method mtd, const std::string && resource);
         
         Method GetMethod() const;
-        std::string const& GetResource() const;
-        void AddParam(std::string const &name, std::string const &value);
-        bool TryGetParameter(std::string const &name, std::string *value) const;
-        bool ExistsParameter(std::string const &name) const;
+        const std::string & GetResource() const;
+        void AddParam(const std::string &name, const std::string &value);
+        bool TryGetParameter(const std::string &name, std::string *value) const;
+        bool ExistsParameter(const std::string &name) const;
         unsigned GetContentLength() const;
         
       private:

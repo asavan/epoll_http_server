@@ -42,6 +42,7 @@ namespace Network
 
 	  void onSelect(SocketHandle handle, SelectType selectType)
       {
+		  Common::Log::GetLogInst() << "onSelect ListenThread " << std::this_thread::get_id() << std::endl;
         try
         {
           sockaddr Addr = { 0 };
@@ -55,21 +56,18 @@ namespace Network
         }
         catch (const std::exception &e)
         {
-          Common::Log::GetLogInst() << e.what() << std::endl;
+          Common::Log::GetLogInst() << __LINE__ << e.what() << std::endl;
         }
       }
       
     private:
-      enum { WaitTimeout = 20 };
-      ClientItemQueuePtr AcceptedClients;
-      // UserSessionCreator SessionCreator;
-      SelectorThread Selector;
+		enum { WaitTimeout = 20 };
+		ClientItemQueuePtr AcceptedClients;
+		SelectorThread Selector;
 
 		std::string RootDir;
 		std::string DefaultPage;
 		bool UseCorking;
-      
-      
     };
   
     class WorkerThread
@@ -88,6 +86,7 @@ namespace Network
 
 	  void onSelect(SocketHandle handle, SelectType selectType)
       {
+		  Common::Log::GetLogInst() << "onSelect WorkerThread " << std::this_thread::get_id() << std::endl;
         try
         {
           auto Iter = Clients.find(handle);
@@ -119,7 +118,7 @@ namespace Network
         }
         catch (const std::exception &e)
         {
-			Common::Log::GetLogInst() << e.what() << std::endl;
+			Common::Log::GetLogInst() << __LINE__ << e.what() << std::endl;
         }
       }
 	  virtual void run() 
@@ -141,6 +140,7 @@ namespace Network
       
       void OnIdle()
       {
+		  Common::Log::GetLogInst() << "OnIdle " << std::this_thread::get_id() << std::endl;
         try
         {
           for (ClientPool::iterator i = Clients.begin() ; i != Clients.end() ; )
@@ -165,7 +165,7 @@ namespace Network
               }
               catch (const std::exception &e)
               {
-				  Common::Log::GetLogInst() << e.what()<< std::endl;
+				  Common::Log::GetLogInst() << __LINE__ << e.what()<< std::endl;
                   Clients.erase(i++);
 				
               }
@@ -205,7 +205,7 @@ namespace Network
         }
         catch (const std::exception &e)
         {
-          Common::Log::GetLogInst() << e.what();
+			Common::Log::GetLogInst() << e.what() << std::endl;
         }
         Clients.erase(iter);
       }

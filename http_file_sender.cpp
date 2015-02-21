@@ -13,12 +13,13 @@ namespace Network
     {
 	  DECLARE_RUNTIME_EXCEPTION(HttpFileSender)
 
-      HttpFileSender::HttpFileSender(IConnectionCtrl *ctrl, const std::string &resourceName)
+      HttpFileSender::HttpFileSender(IConnectionCtrl *ctrl, const std::string &&resourceName)
         : HttpResponse(ctrl)
         , File(resourceName)
         , HeaderHasBeenSent(false)
         , FileOffset(0)
       {
+		  Common::Log::GetLogInst() << "HttpFileSender " << resourceName << std::endl;
         SetResourceName(resourceName);
         SetContentLength(File.GetFileSize());
       }

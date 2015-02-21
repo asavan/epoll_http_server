@@ -25,7 +25,7 @@ namespace System
 	// Common::Log::GetLogInst() << "Open file " << fileName << std::endl;
     int NewHandle = open(fileName.c_str(), 0);
     if (NewHandle == -1)
-      throw FileHolderException("Failed to open file " + fileName + "\n");
+      throw FileHolderException("Failed to open file " + fileName);
     int NewSize = lseek(NewHandle, 0, SEEK_SET);
     if (NewSize == -1 || (NewSize = lseek(NewHandle, 0, SEEK_END)) == -1 ||
         lseek(NewHandle, 0, SEEK_SET) == -1)

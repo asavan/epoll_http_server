@@ -22,7 +22,7 @@ namespace Network
         : public HttpResponse
       {
       public:
-        HttpFileSender(IConnectionCtrl *ctrl, const std::string &resourceName);
+        HttpFileSender(IConnectionCtrl *ctrl, const std::string &&resourceName);
         bool Send();
         
       private:

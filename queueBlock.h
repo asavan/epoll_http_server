@@ -1,15 +1,25 @@
+#include "non_copyable.h"
+
 #include <queue>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+
+#include <iostream>
  
 template <typename T>
-class Queue
+class Queue : public Common::NonCopyable
 {
  public:
 
 	 Queue(int maxItemsCount) : maxItemsCount_(maxItemsCount)
 	 {
+	 }
+	 ~Queue()
+	 {
+
+		 std::cout << "queue destory" << std::endl;
+		 cond_.notify_all();
 	 }
  
   T pop()

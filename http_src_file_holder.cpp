@@ -14,6 +14,7 @@ namespace Network
       try
         : System::FileHolder(fileName)
       {
+		  Common::Log::GetLogInst() << "HttpSrcFileHolder " << fileName << std::endl;
       }
       catch (const System::FileHolderException & e)
       {

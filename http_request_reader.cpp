@@ -30,7 +30,7 @@ namespace Network
         if (Buffer.size() < EndHeaderLen)
           return;
         
-        if (Header.get())
+        if (Header)
         {
           ProcessRequest();
           return;
@@ -85,7 +85,6 @@ namespace Network
       
       std::unique_ptr<HttpRequestHeader> HttpRequestReader::ExtractRequestMethod(char const *str, unsigned len)
       {
-        std::unique_ptr<HttpRequestHeader> Header;
         struct
         {
           void operator () (const char *&str, unsigned &len) const
@@ -136,8 +135,8 @@ namespace Network
         {
             throw HttpRequestReaderException("Unsupported http version", statHTTPVersionNotSupported);
         }
-        Header.reset(new HttpRequestHeader(Mtd, Resource));
-        return Header;
+        std::unique_ptr<HttpRequestHeader> header(new HttpRequestHeader(Mtd, Resource));
+        return header;
       }
       
       void HttpRequestReader::ExtractRequestParams(char const *str, unsigned len, HttpRequestHeader *header)
