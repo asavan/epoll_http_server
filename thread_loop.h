@@ -2,6 +2,7 @@
 #define __COMMON_THREAD_LOOP_H__
 
 #include "non_copyable.h"
+#include "idisposable.h"
 
 #include <functional>
 #include <memory>
@@ -10,24 +11,18 @@
 namespace System
 {
 
-	namespace Thread
-	{
-		typedef std::function<void ()> ThreadFunction;
-		typedef std::unique_ptr<ThreadFunction> ThreadFunctionPtr;
-	}
-
   class ThreadLoop
     : private Common::NonCopyable
   {
   public:
-    ThreadLoop(const Thread::ThreadFunction& func);
+    ThreadLoop(Common::IRunnable* task);
     ~ThreadLoop();
     
   private:
     bool volatile IsRun;
-    Thread::ThreadFunctionPtr Function;
+    // Thread::ThreadFunctionPtr Function;
     std::thread worker;
-    
+    Common::IRunnable* task_;
     void Work();
   };
 

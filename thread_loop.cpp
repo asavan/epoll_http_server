@@ -3,9 +3,9 @@
 namespace System
 {
 
-  ThreadLoop::ThreadLoop(const Thread::ThreadFunction &func)
+  ThreadLoop::ThreadLoop(Common::IRunnable* task)
     : IsRun(true)
-    , Function(new Thread::ThreadFunction(func)),
+    , task_(task),
 	  worker(std::bind(&ThreadLoop::Work, this))
   {
     
@@ -20,7 +20,7 @@ namespace System
   void ThreadLoop::Work()
   {
     while (IsRun)
-      (*Function)();
+      task_->run();
   }
   
 }

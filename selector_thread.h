@@ -3,30 +3,35 @@
 
 #include "epoll_selector.h"
 #include "thread_loop.h"
-
+#include "idisposable.h"
 #include <memory>
 
 namespace Network
 {
 
   class SelectorThread
-    : private EPollSelector
-    , private System::ThreadLoop
+    : private EPollSelector,
+	public Common::IRunnable
   {
   public:
     
     using EPollSelector::AddSocket;
     using EPollSelector::DelSocket;
     
-    typedef System::Thread::ThreadFunction ThreadFunction;
-    typedef std::shared_ptr<ThreadFunction> ThreadFunctionPtr;
+	typedef std::function<void ()> ThreadFunction;
+    typedef std::unique_ptr<ThreadFunction> ThreadFunctionPtr;
     
     SelectorThread(int maxEventsCount, unsigned waitTimeout, ISelector::SelectFunction onSelectFunc,
                    ThreadFunctionPtr idleFunc = ThreadFunctionPtr());
     virtual ~SelectorThread();
-    
+    virtual void run();
   private:
-    void SelectItems(ISelector::SelectFunction &func, unsigned waitTimeout, ThreadFunctionPtr idleFunc);
+	System::ThreadLoop threadLoop;
+	ThreadFunctionPtr idleFunc_;
+	ISelector::SelectFunction onSelectFunc_;
+	int maxEventsCount_;
+	unsigned waitTimeout_;
+    void SelectItems(ISelector::SelectFunction &func, unsigned waitTimeout);
   };
 
 }

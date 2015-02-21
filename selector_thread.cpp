@@ -7,22 +7,31 @@ namespace Network
   SelectorThread::SelectorThread(int maxEventsCount, unsigned waitTimeout,
                                  ISelector::SelectFunction onSelectFunc,
                                  ThreadFunctionPtr idleFunc)
-    : EPollSelector(maxEventsCount)
-    , System::ThreadLoop(std::bind(&SelectorThread::SelectItems, this, onSelectFunc, waitTimeout, idleFunc))
+    : EPollSelector(maxEventsCount),
+	threadLoop(this),
+	idleFunc_(std::move(idleFunc)),
+	onSelectFunc_(onSelectFunc),
+	maxEventsCount_(maxEventsCount),
+	waitTimeout_(waitTimeout)	
   {
   }
   
   SelectorThread::~SelectorThread()
   {
   }
+
+  void SelectorThread::run() 
+  {
+	SelectItems(onSelectFunc_, waitTimeout_);
+  }
     
-  void SelectorThread::SelectItems(ISelector::SelectFunction &func, unsigned waitTimeout, ThreadFunctionPtr idleFunc)
+  void SelectorThread::SelectItems(ISelector::SelectFunction &func, unsigned waitTimeout)
   {
     try
     {
       Select(&func, waitTimeout);
-      if (idleFunc)
-        (*idleFunc)();
+      if (idleFunc_)
+        (*idleFunc_)();
     }
     catch (const std::exception &e)
     {

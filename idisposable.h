@@ -11,6 +11,16 @@ namespace Common
     }
   };
 
+  class IRunnable
+  {
+  public:
+    virtual ~IRunnable()
+    {
+    }
+	virtual void run() = 0;
+  };
+
+
 }
 
 #endif  // !__COMMON_IDISPOSABLE_H__
