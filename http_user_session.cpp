@@ -82,18 +82,24 @@ namespace Network
       {		  
         try
         {
+			Common::Log::GetLogInst() <<"1 " << std::endl;
           if (FileSender)
           {
+			  Common::Log::GetLogInst() <<"2 " << std::endl;
             if (!FileSender->Send())
             {
+				Common::Log::GetLogInst() <<"3 " << std::endl;
               FileSender.reset();
               Ctrl->MarkMeForClose();
             }
           }
+		  Common::Log::GetLogInst() <<"4 " << std::endl;
           if (HeadResponse)
           {
+			  Common::Log::GetLogInst() <<"5 " << std::endl;
             if (!HeadResponse->Send())
             {
+				Common::Log::GetLogInst() <<"6 " << std::endl;
               HeadResponse.reset();
               Ctrl->MarkMeForClose();
             }
@@ -101,7 +107,7 @@ namespace Network
         }
         catch (const std::exception &e)
         {
-		  Common::Log::GetLogInst() << "555 " <<e.what() << std::endl;
+		  Common::Log::GetLogInst() <<__FILE__ << __LINE__ <<e.what() << std::endl;
           Ctrl->MarkMeForClose();          
         }
       }

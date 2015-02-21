@@ -39,7 +39,8 @@ namespace Network
 		}
         if (GetCtrl()->SendFile(File.GetHandle(), FileOffset, &Bytes))
 		{
-          return false;
+			Common::Log::GetLogInst() << "why false " << std::endl;
+			return true;
 		}
         FileOffset += Bytes;
         if (FileOffset >= File.GetFileSize())

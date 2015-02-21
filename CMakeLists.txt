@@ -25,6 +25,7 @@ set(SOURCES_LIB client_item.cpp
 	tcp_server.cpp
 	tcp_server_socket.cpp
 	thread_loop.cpp
+	worker_thread.cpp
 )
 set(SOURCES_MAIN main.cpp)
 
@@ -61,6 +62,7 @@ SET( HEADERS client_item.h
 	tcp_server_socket.h
 	thread_loop.h
 	types.h
+	worker_thread.h
 )
 add_library(epolllib STATIC ${SOURCES_LIB} ${HEADERS})
 add_executable(web_server ${SOURCES_MAIN})

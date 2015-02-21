@@ -2,6 +2,7 @@
 #define __COMMON_QUEUE_H__
 
 #include "exceptions.h"
+#include "non_copyable.h"
 #include <mutex>
 
 #include <queue>

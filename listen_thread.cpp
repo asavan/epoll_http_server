@@ -1,4 +1,9 @@
 #include "listen_thread.h"
+
+#include "logger.h"
+#include "http_user_session.h"
+
+
 namespace Network
 {
 
@@ -26,6 +31,7 @@ void ListenThread::onSelect(SocketHandle handle, SelectType selectType)
 		ClientItemPtr Client(new ClientItem(std::move(holder),
 		Network::Proto::Http::CreateHttpUserSession(RootDir, DefaultPage, UseCorking)));
 
+		Common::Log::GetLogInst() << "push " << Client->GetHandle() << " " << std::this_thread::get_id() << std::endl;
 		AcceptedClients->push(std::move(Client));
 		Common::Log::GetLogInst() << "push " << std::this_thread::get_id() << std::endl;
 	}
