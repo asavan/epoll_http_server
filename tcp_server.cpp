@@ -4,7 +4,7 @@
 #include "logger.h"
 
 
-#include "queue.h"
+#include "queueBlock.h"
 #include "client_item.h"
 
 #include "http_user_session.h"
@@ -19,7 +19,7 @@ namespace Network
   namespace Private
   {
   
-	typedef Queue<ClientItem> ClientItemQueue;
+	typedef Queue<std::unique_ptr<ClientItem>> ClientItemQueue;
     typedef std::shared_ptr<ClientItemQueue> ClientItemQueuePtr;
   
     class ListenThread
@@ -61,7 +61,7 @@ namespace Network
           ClientItemPtr Client(new ClientItem(std::move(holder),
             Network::Proto::Http::CreateHttpUserSession(RootDir, DefaultPage, UseCorking)));
             
-          AcceptedClients->Push(std::move(Client));
+          AcceptedClients->push(std::move(Client));
         }
         catch (const std::exception &e)
         {
@@ -175,10 +175,10 @@ namespace Network
 			return;
 		  }
           		  	  
-          std::unique_ptr<ClientItem> Client = AcceptedClients->Pop();
+          std::unique_ptr<ClientItem> Client = AcceptedClients->pop();
           if (!Client)
 		  {
-			// Common::Log::GetLogInst() << "wrong client" << std::endl;
+			Common::Log::GetLogInst() << "wrong client" << std::endl;
             return;
 		  }
           

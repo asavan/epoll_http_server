@@ -24,14 +24,14 @@ namespace Network
       : MaxItemsCount(maxItemsCount)
     {
     }
-    void Push(std::unique_ptr<T> item)
+    void push(std::unique_ptr<T> item)
     {
       LockGuard Lock(Guard);
       if (Items.size() >= MaxItemsCount)
         throw QueueException("Queue is full");
       Items.push(std::move(item));
     }
-    ItemPtr Pop()
+    ItemPtr pop()
     {   
 		LockGuard Lock(Guard);	
        

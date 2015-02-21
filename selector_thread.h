@@ -25,8 +25,9 @@ namespace Network
 	void AddSocket(SocketHandle handle, int selectType);
     void DelSocket(SocketHandle handle);
   private:
-	EPollSelector ePollSelector_;
 	System::ThreadLoop threadLoop;
+	EPollSelector ePollSelector_;
+	
 	ISelector::SelectFunction onSelectFunc_;
 	int maxEventsCount_;
 	unsigned waitTimeout_;

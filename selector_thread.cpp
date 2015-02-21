@@ -7,8 +7,8 @@ namespace Network
   SelectorThread::SelectorThread(int maxEventsCount, unsigned waitTimeout,
                                  ISelector::SelectFunction onSelectFunc,
                                  Common::IRunnable* task)
-    : ePollSelector_(maxEventsCount),
-	threadLoop(this),
+    : 	threadLoop(this),
+	ePollSelector_(maxEventsCount),
 	// idleFunc_(std::move(idleFunc)),
 	onSelectFunc_(onSelectFunc),
 	maxEventsCount_(maxEventsCount),

@@ -50,6 +50,7 @@ SET( HEADERS client_item.h
 	logger.h
 	non_copyable.h
 	queue.h
+	queueBlock.h
 	selector_thread.h
 	socket.h
 	socket_holder.h
