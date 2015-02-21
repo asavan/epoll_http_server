@@ -7,17 +7,21 @@ namespace Network
   SelectorThread::SelectorThread(int maxEventsCount, unsigned waitTimeout,
                                  ISelectable* selectTask,
                                  Common::IRunnable* task)
-    : 	threadLoop(this),
+    : 	
 	ePollSelector_(maxEventsCount),
 	maxEventsCount_(maxEventsCount),
 	waitTimeout_(waitTimeout),
 	selectTask_(selectTask),
-	task_(task)
+	task_(task),
+	threadLoop(this)
   {
   }
   
   SelectorThread::~SelectorThread()
   {
+	  task_ = NULL;
+	  selectTask_ = NULL;
+	  Common::Log::GetLogInst() << "Selector wait to die " << threadLoop.getId() << " " << ePollSelector_.getEpollId() << std::endl;
   }
 
   void SelectorThread::AddSocket(SocketHandle handle, int selectType)
@@ -34,8 +38,12 @@ namespace Network
   {
 	try
     {
-		ePollSelector_.Select(selectTask_, waitTimeout_);
-		if (task_) {
+		if (selectTask_)
+		{
+			ePollSelector_.Select(selectTask_, waitTimeout_);
+		}
+		if (task_) 
+		{
 			task_->run();
 		}
     }

@@ -25,7 +25,7 @@ namespace Network
 	void AddSocket(SocketHandle handle, int selectType);
     void DelSocket(SocketHandle handle);
   private:
-	System::ThreadLoop threadLoop;
+	
 	EPollSelector ePollSelector_;
 	
 	// ISelector::SelectFunction onSelectFunc_;
@@ -33,7 +33,7 @@ namespace Network
 	unsigned waitTimeout_;
 	ISelectable* selectTask_;
 	Common::IRunnable* task_;
-	
+	System::ThreadLoop threadLoop;
 	
   };
 

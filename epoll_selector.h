@@ -23,6 +23,8 @@ namespace Network
     virtual void AddSocket(SocketHandle handle, int selectType);
     virtual void DelSocket(SocketHandle handle);
 	virtual void Select(ISelectable *function, unsigned timeout);
+
+	int getEpollId() const {return EPoll;}
     
   private:
     typedef std::vector<epoll_event> EventPool;

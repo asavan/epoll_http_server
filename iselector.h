@@ -3,8 +3,6 @@
 
 #include "types.h"
 
-#include <functional>
-
 namespace Network
 {
 	enum SelectType
@@ -20,10 +18,7 @@ namespace Network
 	};
 
   struct ISelector
-  {
-    
-    
-    // typedef std::function<void (SocketHandle, SelectType)> SelectFunction;
+  {       
     
     virtual ~ISelector()
     {

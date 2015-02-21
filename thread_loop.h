@@ -15,11 +15,13 @@ namespace System
   public:
     ThreadLoop(Common::IRunnable* task);
     ~ThreadLoop();
+	std::thread::id  getId() const;
     
   private:
     bool volatile IsRun;
+	Common::IRunnable* task_;
     std::thread worker;
-    Common::IRunnable* task_;
+    
     void Work();
   };
 

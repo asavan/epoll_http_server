@@ -1,4 +1,5 @@
 #include "thread_loop.h"
+#include "logger.h"
 
 namespace System
 {
@@ -11,8 +12,14 @@ namespace System
     
   }
 
+  std::thread::id  ThreadLoop::getId() const
+  {
+	  return worker.get_id();
+  }
+
   ThreadLoop::~ThreadLoop()
   {
+	Common::Log::GetLogInst() << "thread wait to die" << std::endl;
     IsRun = false;
 	worker.join();
   }

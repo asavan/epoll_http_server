@@ -1,5 +1,5 @@
 #include "epoll_selector.h"
-
+#include "logger.h"
 #include "exceptions.h"
 
 #include <errno.h>
@@ -20,6 +20,7 @@ namespace Network
   EPollSelector::~EPollSelector()
   {
     close(EPoll);
+	Common::Log::GetLogInst() << "epool closed " << getEpollId() << std::endl;
   }
   
   void EPollSelector::AddSocket(SocketHandle handle, int selectType)
