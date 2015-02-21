@@ -19,7 +19,6 @@ namespace Network
         , HeaderHasBeenSent(false)
         , FileOffset(0)
       {
-		Common::Log::GetLogInst() << "resourceName " << resourceName << std::endl;
         SetResourceName(resourceName);
         SetContentLength(File.GetFileSize());
       }
@@ -33,7 +32,10 @@ namespace Network
 		{
           return false;
 		}
-		Common::Log::GetLogInst() << "FileOffset " << FileOffset << std::endl;
+		if (FileOffset)
+		{
+			Common::Log::GetLogInst() << "FileOffset " << FileOffset << std::endl;
+		}
         if (GetCtrl()->SendFile(File.GetHandle(), FileOffset, &Bytes))
 		{
           return false;

@@ -22,7 +22,7 @@ namespace System
   
   void FileHolder::Open(const std::string& fileName)
   {
-	Common::Log::GetLogInst() << "Open file " << fileName << std::endl;
+	// Common::Log::GetLogInst() << "Open file " << fileName << std::endl;
     int NewHandle = open(fileName.c_str(), 0);
     if (NewHandle == -1)
       throw FileHolderException("Failed to open file " + fileName + "\n");

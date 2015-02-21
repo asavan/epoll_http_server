@@ -50,7 +50,6 @@ namespace Network
             while (Response.Send());
           }
         } SendErrorPage;
-		Common::Log::GetLogInst() << "OnRecvData begin" << std::endl;
         try
         {
           AssignData(buf, bytes);
@@ -80,8 +79,7 @@ namespace Network
       }
       
       void HttpUserSession::OnIdle()
-      {
-		  Common::Log::GetLogInst() << "OnIdle begin" << std::endl;
+      {		  
         try
         {
           if (FileSender.get())
@@ -111,7 +109,7 @@ namespace Network
       
       void HttpUserSession::ProcessRequest(const HttpRequestHeader &header, void const *buf, unsigned bytes)
       {
-		  Common::Log::GetLogInst() << "Process" << std::endl;
+		  // Common::Log::GetLogInst() << "Process" << std::endl;
         switch (header.GetMethod())
         {
         case HttpRequestHeader::mtdGet :

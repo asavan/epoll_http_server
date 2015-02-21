@@ -24,7 +24,6 @@ namespace Network
   
   void ClientItem::RecvData()
   {
-	  Common::Log::GetLogInst() << "RecvData" << std::endl;
     if (MarkedForClose)
       return;
     IOHelper IO(holder_->GetHandle());

@@ -37,7 +37,7 @@ namespace Network
       
       bool HttpResponse::Send()
       {
-		  Common::Log::GetLogInst() << "send begin" << std::endl;
+		  // Common::Log::GetLogInst() << "send begin" << std::endl;
         if (Buffer.empty())
           return false;
         unsigned Bytes = Buffer.size();
@@ -78,7 +78,7 @@ namespace Network
         Connection = connection;
       }
       
-      void HttpResponse::SetResourceName(std::string const &resourceName)
+      void HttpResponse::SetResourceName(const std::string& resourceName)
       {
         ResourceName = resourceName;
       }

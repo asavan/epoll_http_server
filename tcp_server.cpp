@@ -54,21 +54,14 @@ namespace Network
       {
         try
         {
-			Common::Log::GetLogInst() << "start" << std::endl;
-			{
           sockaddr Addr = { 0 };
           socklen_t AddrSize = sizeof(Addr);
                     
 		  SocketHolderPtr holder = Accept(true, &Addr, &AddrSize);
           ClientItemPtr Client(new ClientItem(std::move(holder),
             Network::Proto::Http::CreateHttpUserSession(RootDir, DefaultPage, UseCorking)));
-  
-          if (!AcceptedClients)
-            throw std::invalid_argument("Empty destQueue pointer");
-          
+            
           AcceptedClients->Push(std::move(Client));
-			}
-		  Common::Log::GetLogInst() << "pushed" << std::endl;
         }
         catch (const std::exception &e)
         {
