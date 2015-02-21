@@ -15,6 +15,12 @@ namespace Network
 	task_(task),
 	threadLoop(this)
   {
+	  // threadLoop.Start();
+  }
+
+  void SelectorThread::Start()
+  {
+	 threadLoop.Start();
   }
   
   SelectorThread::~SelectorThread()

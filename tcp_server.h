@@ -19,7 +19,7 @@ namespace Network
 		int maxConnectionsCount, const std::string& rootDir, const std::string& defaultPage, bool useCorking);
     
   private:
-    typedef std::unique_ptr<Common::IDisposable> IDisposablePtr;
+    typedef std::unique_ptr<Common::IStartable> IDisposablePtr;
     typedef std::vector<IDisposablePtr> IDisposablePool;
     
     IDisposablePool Threads;	

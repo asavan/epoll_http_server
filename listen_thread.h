@@ -16,13 +16,17 @@ namespace Network
     typedef std::shared_ptr<ClientItemQueue> ClientItemQueuePtr;
   
 	class ListenThread:
-      public Common::IDisposable, ISelectable
+		public ISelectable, public Common::IStartable
     {
     public:
       ListenThread(InetAddressPtr locAddr, int backlog,
                    ClientItemQueuePtr acceptedClients,
                    const std::string& rootDir, const std::string& defaultPage, bool useCorking);
 	  virtual void onSelect(SocketHandle handle, SelectType selectType);      
+	  virtual void Start() 
+	  {
+		Selector.Start();
+	  }
     private:
 		enum { WaitTimeout = 20 };
 		TCPServerSocket TCPServerSocket_;

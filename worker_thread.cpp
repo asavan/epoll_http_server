@@ -99,7 +99,7 @@ namespace Network
 		  // Common::Log::GetLogInst() << "pop " << Client->GetHandle()<< " " << std::this_thread::get_id() << std::endl;
           if (!Client)
 		  {
-			Common::Log::GetLogInst() << "wrong client" << std::endl;
+			// Common::Log::GetLogInst() << "wrong client" << std::endl;
             return;
 		  }
           

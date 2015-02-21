@@ -11,7 +11,7 @@ namespace Network
 
   class SelectorThread
     :
-	public Common::IRunnable,
+	public Common::IRunnable, Common::IStartable,
 	private Common::NonCopyable
   {
   public:
@@ -20,6 +20,7 @@ namespace Network
                    Common::IRunnable* task = NULL);
     virtual ~SelectorThread();
     virtual void run();
+	virtual void Start();
 
 	// ISelector
 	void AddSocket(SocketHandle handle, int selectType);

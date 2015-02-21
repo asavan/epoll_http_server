@@ -10,10 +10,15 @@ namespace System
 {
 
   class ThreadLoop
-    : private Common::NonCopyable
+    : private Common::NonCopyable,
+	public Common::IStartable
   {
   public:
-    ThreadLoop(Common::IRunnable* task);
+    explicit ThreadLoop(Common::IRunnable* task);
+	virtual void Start() {
+        // This will start the thread. Notice move semantics!
+        worker = std::thread(&ThreadLoop::Work,this);
+	}
     ~ThreadLoop();
 	std::thread::id  getId() const;
     

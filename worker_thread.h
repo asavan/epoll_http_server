@@ -6,16 +6,20 @@ namespace Network
 {
 
 class WorkerThread
-      : private Common::NonCopyable
-      , public Common::IDisposable, 
+      : private Common::NonCopyable,
 	  public Common::IRunnable,
-	  public ISelectable
+	  public ISelectable, 
+	  public Common::IStartable
     {
     public:
       WorkerThread(int maxEventsCount, ClientItemQueuePtr acceptedClients);
 
 	  virtual void onSelect(SocketHandle handle, SelectType selectType);
 	  virtual void run();
+	  virtual void Start() 
+	  {
+		Selector.Start();
+	  }
     private:
       enum { WaitTimeout = 20 };
       

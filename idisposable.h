@@ -2,14 +2,7 @@
 #define __COMMON_IDISPOSABLE_H__
 
 namespace Common
-{
-
-  struct IDisposable
-  {
-    virtual ~IDisposable()
-    {
-    }
-  };
+{  
 
   class IRunnable
   {
@@ -18,6 +11,15 @@ namespace Common
     {
     }
 	virtual void run() = 0;
+  };
+
+  class IStartable
+  {
+  public:
+    virtual ~IStartable()
+    {
+    }
+	virtual void Start() = 0;
   };
 
 

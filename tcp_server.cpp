@@ -30,9 +30,13 @@ namespace Network
 	  {
 		maxEventsCount += maxConnectionsCount % maxThreadsCount;
 	  }
-      Threads.push_back(IDisposablePtr(new WorkerThread(maxEventsCount, AcceptedItems)));
+	  IDisposablePtr ptr(new WorkerThread(maxEventsCount, AcceptedItems));
+	  ptr->Start();
+	  Threads.push_back(std::move(ptr));
     }
-	Threads.push_back(IDisposablePtr(new ListenThread(std::move(locAddr), backlog, AcceptedItems, rootDir, defaultPage, useCorking)));
+	IDisposablePtr ptr(new ListenThread(std::move(locAddr), backlog, AcceptedItems, rootDir, defaultPage, useCorking));
+	ptr->Start();
+	Threads.push_back(std::move(ptr));
   }
 
 }
