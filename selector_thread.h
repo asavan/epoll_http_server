@@ -19,18 +19,19 @@ namespace Network
     using EPollSelector::DelSocket;
     
 	typedef std::function<void ()> ThreadFunction;
-    typedef std::unique_ptr<ThreadFunction> ThreadFunctionPtr;
+    // typedef std::unique_ptr<ThreadFunction> ThreadFunctionPtr;
     
     SelectorThread(int maxEventsCount, unsigned waitTimeout, ISelector::SelectFunction onSelectFunc,
-                   ThreadFunctionPtr idleFunc = ThreadFunctionPtr());
+                   Common::IRunnable* task = NULL);
     virtual ~SelectorThread();
     virtual void run();
   private:
 	System::ThreadLoop threadLoop;
-	ThreadFunctionPtr idleFunc_;
+	// ThreadFunctionPtr idleFunc_;
 	ISelector::SelectFunction onSelectFunc_;
 	int maxEventsCount_;
 	unsigned waitTimeout_;
+	Common::IRunnable* task_;
     void SelectItems(ISelector::SelectFunction &func, unsigned waitTimeout);
   };
 

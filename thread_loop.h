@@ -20,7 +20,6 @@ namespace System
     
   private:
     bool volatile IsRun;
-    // Thread::ThreadFunctionPtr Function;
     std::thread worker;
     Common::IRunnable* task_;
     void Work();

@@ -72,7 +72,8 @@ namespace Network
   
     class WorkerThread
       : private Common::NonCopyable
-      , public Common::IDisposable
+      , public Common::IDisposable, 
+	  public Common::IRunnable
     {
     public:
       WorkerThread(int maxEventsCount, ClientItemQueuePtr acceptedClients)
@@ -80,10 +81,13 @@ namespace Network
         , AcceptedClients(acceptedClients)
         , Selector(maxEventsCount, WaitTimeout, std::bind(&WorkerThread::OnSelect,
               this, std::placeholders::_1, std::placeholders::_2),
-            SelectorThread::ThreadFunctionPtr(new SelectorThread::ThreadFunction(std::bind(
-              &WorkerThread::OnIdle, this))))
+            this)
       {
       }
+	  virtual void run() 
+	  {
+		OnIdle();
+	  }
       
     private:
       enum { WaitTimeout = 20 };
