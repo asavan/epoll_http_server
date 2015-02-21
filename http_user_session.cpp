@@ -88,7 +88,7 @@ namespace Network
           {
             if (!FileSender->Send())
             {
-              FileSender.reset(0);
+              FileSender.reset();
               Ctrl->MarkMeForClose();
             }
           }
@@ -96,7 +96,7 @@ namespace Network
           {
             if (!HeadResponse->Send())
             {
-              HeadResponse.reset(0);
+              HeadResponse.reset();
               Ctrl->MarkMeForClose();
             }
           }

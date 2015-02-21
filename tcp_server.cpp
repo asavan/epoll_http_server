@@ -61,7 +61,6 @@ namespace Network
                     
 		  SocketHolderPtr holder = Accept(true, &Addr, &AddrSize);
           ClientItemPtr Client(new ClientItem(std::move(holder),
-            InetAddress::CreateFromSockAddr(&Addr, AddrSize),
             Network::Proto::Http::CreateHttpUserSession(RootDir, DefaultPage, UseCorking)));
   
           if (!AcceptedClients)

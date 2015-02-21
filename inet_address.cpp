@@ -28,16 +28,7 @@ namespace Network
   int InetAddress::GetSize() const
   {
     return Size;
-  }
-  
-  
-  
-  InetAddressPtr InetAddress::CreateFromSockAddr(sockaddr *addr, int size)
-  {
-    InetAddressPtr Addr(new InetAddress(addr, size));
-    return Addr;
-  }
-  
+  }       
   
   
   void InetAddress::Init(sockaddr const *addr, int size)

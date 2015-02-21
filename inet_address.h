@@ -14,13 +14,8 @@ namespace Network
   
   public:
     virtual ~InetAddress();
-    static InetAddressPtr CreateFromSockAddr(sockaddr *addr, int size);
-	
 	sockaddr const* GetAddr() const;
 	int GetSize() const;
-	
-	// 		
-    
   protected:
 	
     InetAddress(sockaddr const *addr, int size);

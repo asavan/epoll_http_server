@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(epoll_project)
 
-SET(CMAKE_CXX_FLAGS "-g -std=c++0x -Wall -Wextra -pedantic")
+SET(CMAKE_CXX_FLAGS "-O3 -std=c++0x -Wall -Wextra -pedantic")
 
 set(SOURCES_LIB client_item.cpp
 	command_line.cpp

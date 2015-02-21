@@ -5,20 +5,16 @@
 namespace Network
 {
 
-  ClientItem::ClientItem(SocketHolderPtr holder, InetAddressPtr addr, IUserSessionPtrU userSession)
-    : addr_(std::move(addr)),
+  ClientItem::ClientItem(SocketHolderPtr holder, IUserSessionPtrU userSession)
+    :
 	  holder_(std::move(holder))
     , SessionLastActionTime(std::time(0))
     , MarkedForClose(false)
-	// , UserSession(std::move(userSession))
-    , BufferSize(userSession->GetMaxBufSizeForRead())
+	, UserSession(std::move(userSession))
+    , BufferSize(UserSession->GetMaxBufSizeForRead())
     , RecvBuffer(new char [BufferSize])
   {
-	  // Common::Log::GetLogInst() << "Init client" << std::endl;
-	  UserSession = std::move(userSession);
-	  // Common::Log::GetLogInst() << "Init session" << std::endl;
     UserSession->Init(this);
-	// Common::Log::GetLogInst() << "end Init client" << std::endl;
   }    
   
   bool ClientItem::CanClose() const
@@ -39,9 +35,13 @@ namespace Network
   void ClientItem::OnIdle()
   {
     if (!MarkedForClose)
+	{
       MarkedForClose = UserSession->IsExpiredSession(SessionLastActionTime);
+	}
     if (MarkedForClose)
+	{
       return;
+	}
     UserSession->OnIdle();
   }
   
@@ -72,11 +72,6 @@ namespace Network
     return IO.SendFile(fileHandle, offset, bytes);
   }
   
-  /*InetAddress const& ClientItem::GetAddress() const
-  {
-    return *addr_;
-  }
-  */
   SocketTuner ClientItem::GetSocketTuner() const
   {
     return SocketTuner(GetHandle());

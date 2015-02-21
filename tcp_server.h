@@ -11,8 +11,6 @@
 
 namespace Network
 {  
-  // typedef std::function<IUserSessionPtrU ()> UserSessionCreator;
-
   class TCPServer
     : private Common::NonCopyable
   {

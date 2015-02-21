@@ -1,8 +1,6 @@
 #ifndef __COMMON_THREAD_LOOP_H__
 #define __COMMON_THREAD_LOOP_H__
 
-// #include "thread.h"
-
 #include "non_copyable.h"
 
 #include <functional>
