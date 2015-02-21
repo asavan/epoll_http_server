@@ -5,14 +5,13 @@ namespace Network
 {
 
   SelectorThread::SelectorThread(int maxEventsCount, unsigned waitTimeout,
-                                 ISelector::SelectFunction onSelectFunc,
+                                 ISelectable* selectTask,
                                  Common::IRunnable* task)
     : 	threadLoop(this),
 	ePollSelector_(maxEventsCount),
-	// idleFunc_(std::move(idleFunc)),
-	onSelectFunc_(onSelectFunc),
 	maxEventsCount_(maxEventsCount),
 	waitTimeout_(waitTimeout),
+	selectTask_(selectTask),
 	task_(task)
   {
   }
@@ -35,9 +34,10 @@ namespace Network
   {
 	try
     {
-      ePollSelector_.Select(&onSelectFunc_, waitTimeout_);
-      if (task_)
-        task_->run();
+		ePollSelector_.Select(selectTask_, waitTimeout_);
+		if (task_) {
+			task_->run();
+		}
     }
     catch (const std::exception &e)
     {

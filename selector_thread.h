@@ -16,7 +16,7 @@ namespace Network
   {
   public:
    
-	SelectorThread(int maxEventsCount, unsigned waitTimeout, ISelector::SelectFunction onSelectFunc,
+	SelectorThread(int maxEventsCount, unsigned waitTimeout, ISelectable* selectTask,
                    Common::IRunnable* task = NULL);
     virtual ~SelectorThread();
     virtual void run();
@@ -28,10 +28,12 @@ namespace Network
 	System::ThreadLoop threadLoop;
 	EPollSelector ePollSelector_;
 	
-	ISelector::SelectFunction onSelectFunc_;
+	// ISelector::SelectFunction onSelectFunc_;
 	int maxEventsCount_;
 	unsigned waitTimeout_;
+	ISelectable* selectTask_;
 	Common::IRunnable* task_;
+	
 	
   };
 

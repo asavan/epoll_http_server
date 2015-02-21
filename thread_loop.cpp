@@ -6,7 +6,7 @@ namespace System
   ThreadLoop::ThreadLoop(Common::IRunnable* task)
     : IsRun(true)
     , task_(task),
-	  worker(std::bind(&ThreadLoop::Work, this))
+	  worker(&ThreadLoop::Work, this)
   {
     
   }

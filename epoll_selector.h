@@ -22,7 +22,7 @@ namespace Network
     ~EPollSelector();
     virtual void AddSocket(SocketHandle handle, int selectType);
     virtual void DelSocket(SocketHandle handle);
-    virtual void Select(SelectFunction *function, unsigned timeout);
+	virtual void Select(ISelectable *function, unsigned timeout);
     
   private:
     typedef std::vector<epoll_event> EventPool;

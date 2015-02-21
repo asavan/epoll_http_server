@@ -37,24 +37,23 @@ namespace Network
       throw EPollSelectorException("Failed to del socket from epoll", errno);
   }
   
-  void EPollSelector::Select(SelectFunction *function, unsigned timeout)
+  void EPollSelector::Select(ISelectable *function, unsigned timeout)
   {
     int Count = epoll_wait(EPoll, &Events[0], Events.size(), timeout);
     if (Count == -1)
       throw EPollSelectorException("Failed to select epoll events", errno);
     for (int i = 0 ; i < Count ; ++i)
     {
-      (*function)(Events[i].data.fd, Events[i].events & EPOLLRDHUP ?
-                    ISelector::stClose : ISelector::stRead);
+		function->onSelect(Events[i].data.fd, Events[i].events & EPOLLRDHUP ? stClose : stRead);
     }
   }
   
   int EPollSelector::GetSelectFlags(int selectType)
   {
     int Flags = 0;
-    if (selectType & ISelector::stRead)
+    if (selectType & stRead)
       Flags |= EPOLLIN/* | EPOLLET*/;
-    if (selectType & ISelector::stClose)
+    if (selectType & stClose)
       Flags |= EPOLLRDHUP;
     return Flags;
   }

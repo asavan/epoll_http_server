@@ -4,8 +4,6 @@
 #include "non_copyable.h"
 #include "idisposable.h"
 
-#include <functional>
-#include <memory>
 #include <thread>
 
 namespace System

@@ -25,6 +25,7 @@ namespace Network
     class ListenThread
       : private TCPServerSocket
       , public Common::IDisposable
+	  ,public ISelectable
     {
     public:
       ListenThread(InetAddressPtr locAddr, int backlog,
@@ -33,24 +34,13 @@ namespace Network
 				   : TCPServerSocket(std::move(locAddr), backlog)
         , AcceptedClients(acceptedClients)
         // , SessionCreator(sessionCreator)
-        , Selector(1, WaitTimeout, std::bind(&ListenThread::OnSelect,
-            this, std::placeholders::_1, std::placeholders::_2)),
+        , Selector(1, WaitTimeout, this),
 			RootDir(rootDir), DefaultPage(defaultPage), UseCorking(useCorking)
       {
-        Selector.AddSocket(GetHandle(), Network::ISelector::stRead);
+        Selector.AddSocket(GetHandle(), stRead);
       }
-      
-    private:
-      enum { WaitTimeout = 20 };
-      ClientItemQueuePtr AcceptedClients;
-      // UserSessionCreator SessionCreator;
-      SelectorThread Selector;
 
-		std::string RootDir;
-		std::string DefaultPage;
-		bool UseCorking;
-      
-      void OnSelect(SocketHandle handle, Network::ISelector::SelectType selectType)
+	  void onSelect(SocketHandle handle, SelectType selectType)
       {
         try
         {
@@ -68,21 +58,69 @@ namespace Network
           Common::Log::GetLogInst() << e.what() << std::endl;
         }
       }
+      
+    private:
+      enum { WaitTimeout = 20 };
+      ClientItemQueuePtr AcceptedClients;
+      // UserSessionCreator SessionCreator;
+      SelectorThread Selector;
+
+		std::string RootDir;
+		std::string DefaultPage;
+		bool UseCorking;
+      
+      
     };
   
     class WorkerThread
       : private Common::NonCopyable
       , public Common::IDisposable, 
-	  public Common::IRunnable
+	  public Common::IRunnable,
+	  public ISelectable
     {
     public:
       WorkerThread(int maxEventsCount, ClientItemQueuePtr acceptedClients)
         : MaxConnections(maxEventsCount)
         , AcceptedClients(acceptedClients)
-        , Selector(maxEventsCount, WaitTimeout, std::bind(&WorkerThread::OnSelect,
-              this, std::placeholders::_1, std::placeholders::_2),
-            this)
+        , Selector(maxEventsCount, WaitTimeout, this, this)
       {
+      }
+
+	  void onSelect(SocketHandle handle, SelectType selectType)
+      {
+        try
+        {
+          auto Iter = Clients.find(handle);
+		  if (Iter == Clients.end())
+		  {
+            return;
+		  }
+          switch (selectType)
+          {
+          case stRead :
+            {
+              try
+              {
+                Iter->second->RecvData();
+              }
+              catch (...)
+              {
+                RemoveClient(Iter);
+                throw;
+              }
+            }
+            break;
+          case stClose :
+              RemoveClient(Iter);
+            break;
+          default :
+            break;
+          }
+        }
+        catch (const std::exception &e)
+        {
+			Common::Log::GetLogInst() << e.what() << std::endl;
+        }
       }
 	  virtual void run() 
 	  {
@@ -99,42 +137,7 @@ namespace Network
       ClientPool Clients;
       SelectorThread Selector;
       
-      void OnSelect(SocketHandle handle, Network::ISelector::SelectType selectType)
-      {
-        try
-        {
-          auto Iter = Clients.find(handle);
-		  if (Iter == Clients.end())
-		  {
-            return;
-		  }
-          switch (selectType)
-          {
-          case Network::ISelector::stRead :
-            {
-              try
-              {
-                Iter->second->RecvData();
-              }
-              catch (...)
-              {
-                RemoveClient(Iter);
-                throw;
-              }
-            }
-            break;
-          case Network::ISelector::stClose :
-              RemoveClient(Iter);
-            break;
-          default :
-            break;
-          }
-        }
-        catch (const std::exception &e)
-        {
-			Common::Log::GetLogInst() << e.what() << std::endl;
-        }
-      }
+      
       
       void OnIdle()
       {
@@ -182,7 +185,7 @@ namespace Network
             return;
 		  }
           
-          Selector.AddSocket(Client->GetHandle(), Network::ISelector::stRead | Network::ISelector::stClose);
+          Selector.AddSocket(Client->GetHandle(), stRead | stClose);
 		  SocketHandle h = Client->GetHandle();
 		  // Clients.emplace(std::make_pair(h, std::move(Client)));
           // Clients[h].reset(Client.release());
