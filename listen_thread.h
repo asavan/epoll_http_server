@@ -23,10 +23,7 @@ namespace Network
                    ClientItemQueuePtr acceptedClients,
                    const std::string& rootDir, const std::string& defaultPage, bool useCorking);
 	  virtual void onSelect(SocketHandle handle, SelectType selectType);      
-	  virtual void Start() 
-	  {
-		Selector.Start();
-	  }
+	  virtual void Start();	  
     private:
 		enum { WaitTimeout = 20 };
 		TCPServerSocket TCPServerSocket_;

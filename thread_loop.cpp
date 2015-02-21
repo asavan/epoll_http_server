@@ -12,6 +12,11 @@ namespace System
     
   }
 
+  void ThreadLoop::Start()
+  {
+        worker = std::thread(&ThreadLoop::Work,this);
+  }
+
   std::thread::id  ThreadLoop::getId() const
   {
 	  return worker.get_id();

@@ -15,10 +15,7 @@ namespace System
   {
   public:
     explicit ThreadLoop(Common::IRunnable* task);
-	virtual void Start() {
-        // This will start the thread. Notice move semantics!
-        worker = std::thread(&ThreadLoop::Work,this);
-	}
+	virtual void Start();
     ~ThreadLoop();
 	std::thread::id  getId() const;
     

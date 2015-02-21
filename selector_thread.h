@@ -11,7 +11,7 @@ namespace Network
 
   class SelectorThread
     :
-	public Common::IRunnable, Common::IStartable,
+	public Common::IRunnable, public Common::IStartable,
 	private Common::NonCopyable
   {
   public:
