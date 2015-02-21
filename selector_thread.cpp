@@ -7,7 +7,7 @@ namespace Network
   SelectorThread::SelectorThread(int maxEventsCount, unsigned waitTimeout,
                                  ISelector::SelectFunction onSelectFunc,
                                  Common::IRunnable* task)
-    : EPollSelector(maxEventsCount),
+    : ePollSelector_(maxEventsCount),
 	threadLoop(this),
 	// idleFunc_(std::move(idleFunc)),
 	onSelectFunc_(onSelectFunc),
@@ -21,16 +21,21 @@ namespace Network
   {
   }
 
+  void SelectorThread::AddSocket(SocketHandle handle, int selectType)
+  {
+	ePollSelector_.AddSocket(handle, selectType);
+  }
+
+  void SelectorThread::DelSocket(SocketHandle handle)
+  {
+	ePollSelector_.DelSocket(handle);
+  }
+
   void SelectorThread::run() 
   {
-	SelectItems(onSelectFunc_, waitTimeout_);
-  }
-    
-  void SelectorThread::SelectItems(ISelector::SelectFunction &func, unsigned waitTimeout)
-  {
-    try
+	try
     {
-      Select(&func, waitTimeout);
+      ePollSelector_.Select(&onSelectFunc_, waitTimeout_);
       if (task_)
         task_->run();
     }
@@ -38,6 +43,5 @@ namespace Network
     {
       Common::Log::GetLogInst() << e.what();
     }
-  }
-
+  }    
 }

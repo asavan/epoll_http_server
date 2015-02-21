@@ -10,29 +10,28 @@ namespace Network
 {
 
   class SelectorThread
-    : private EPollSelector,
-	public Common::IRunnable
+    :
+	public Common::IRunnable,
+	private Common::NonCopyable
   {
   public:
-    
-    using EPollSelector::AddSocket;
-    using EPollSelector::DelSocket;
-    
-	typedef std::function<void ()> ThreadFunction;
-    // typedef std::unique_ptr<ThreadFunction> ThreadFunctionPtr;
-    
-    SelectorThread(int maxEventsCount, unsigned waitTimeout, ISelector::SelectFunction onSelectFunc,
+   
+	SelectorThread(int maxEventsCount, unsigned waitTimeout, ISelector::SelectFunction onSelectFunc,
                    Common::IRunnable* task = NULL);
     virtual ~SelectorThread();
     virtual void run();
+
+	// ISelector
+	void AddSocket(SocketHandle handle, int selectType);
+    void DelSocket(SocketHandle handle);
   private:
+	EPollSelector ePollSelector_;
 	System::ThreadLoop threadLoop;
-	// ThreadFunctionPtr idleFunc_;
 	ISelector::SelectFunction onSelectFunc_;
 	int maxEventsCount_;
 	unsigned waitTimeout_;
 	Common::IRunnable* task_;
-    void SelectItems(ISelector::SelectFunction &func, unsigned waitTimeout);
+	
   };
 
 }
