@@ -21,7 +21,7 @@ ListenThread::ListenThread(InetAddressPtr locAddr, int backlog,
 
 void ListenThread::onSelect(SocketHandle handle, SelectType selectType)
 {
-	Common::Log::GetLogInst() << "onSelect ListenThread " << std::this_thread::get_id() << std::endl;
+	// Common::Log::GetLogInst() << "onSelect ListenThread " << std::this_thread::get_id() << std::endl;
 	try
 	{
 		sockaddr Addr = { 0 };
@@ -31,9 +31,9 @@ void ListenThread::onSelect(SocketHandle handle, SelectType selectType)
 		ClientItemPtr Client(new ClientItem(std::move(holder),
 		Network::Proto::Http::CreateHttpUserSession(RootDir, DefaultPage, UseCorking)));
 
-		Common::Log::GetLogInst() << "push " << Client->GetHandle() << " " << std::this_thread::get_id() << std::endl;
+		// Common::Log::GetLogInst() << "push " << Client->GetHandle() << " " << std::this_thread::get_id() << std::endl;
 		AcceptedClients->push(std::move(Client));
-		Common::Log::GetLogInst() << "push " << std::this_thread::get_id() << std::endl;
+		// Common::Log::GetLogInst() << "push " << std::this_thread::get_id() << std::endl;
 	}
 	catch (const std::exception &e)
 	{

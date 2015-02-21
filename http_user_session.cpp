@@ -57,7 +57,7 @@ namespace Network
         }
         catch (const HttpRequestHeaderException &e)
         {
-			Common::Log::GetLogInst() << e.what() << std::endl;
+			// Common::Log::GetLogInst() << e.what() << std::endl;
           Ctrl->MarkMeForClose();
           SendErrorPage(Ctrl, static_cast<HttpStatusCode>(e.GetCode()));
           throw;
@@ -82,24 +82,24 @@ namespace Network
       {		  
         try
         {
-			Common::Log::GetLogInst() <<"1 " << std::endl;
+			// Common::Log::GetLogInst() <<"1 " << std::endl;
           if (FileSender)
           {
-			  Common::Log::GetLogInst() <<"2 " << std::endl;
+			  // Common::Log::GetLogInst() <<"2 " << std::endl;
             if (!FileSender->Send())
             {
-				Common::Log::GetLogInst() <<"3 " << std::endl;
+				// Common::Log::GetLogInst() <<"3 " << std::endl;
               FileSender.reset();
               Ctrl->MarkMeForClose();
             }
           }
-		  Common::Log::GetLogInst() <<"4 " << std::endl;
+		  // Common::Log::GetLogInst() <<"4 " << std::endl;
           if (HeadResponse)
           {
-			  Common::Log::GetLogInst() <<"5 " << std::endl;
+			 // Common::Log::GetLogInst() <<"5 " << std::endl;
             if (!HeadResponse->Send())
             {
-				Common::Log::GetLogInst() <<"6 " << std::endl;
+				// Common::Log::GetLogInst() <<"6 " << std::endl;
               HeadResponse.reset();
               Ctrl->MarkMeForClose();
             }
@@ -114,7 +114,7 @@ namespace Network
       
       void HttpUserSession::ProcessRequest(const HttpRequestHeader &header, void const *buf, unsigned bytes)
       {
-		  Common::Log::GetLogInst() << "Process" << std::endl;
+		  // Common::Log::GetLogInst() << "Process" << std::endl;
         switch (header.GetMethod())
         {
         case HttpRequestHeader::mtdGet :
@@ -146,7 +146,7 @@ namespace Network
         }
         else
           Res += resource;
-		Common::Log::GetLogInst() << "CreateResourceName " << resource << std::endl;
+		// Common::Log::GetLogInst() << "CreateResourceName " << resource << std::endl;
         return Res;
       }
 

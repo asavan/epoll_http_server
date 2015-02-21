@@ -19,7 +19,7 @@ namespace System
 
   ThreadLoop::~ThreadLoop()
   {
-	Common::Log::GetLogInst() << "thread wait to die " << getId() << std::endl;
+	// Common::Log::GetLogInst() << "thread wait to die " << getId() << std::endl;
     IsRun = false;
 	worker.join();
   }

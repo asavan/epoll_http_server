@@ -13,12 +13,12 @@ namespace Network
 
       char const HttpRequestHeader::ContentLengthPrm[] = "Content-Length";
 
-      HttpRequestHeader::HttpRequestHeader(Method mtd, const std::string &&resource)
+      HttpRequestHeader::HttpRequestHeader(Method mtd, const std::string &resource)
         : Mtd(mtd)
-		, Resource(std::move(resource))
+		, Resource(resource)
         , ContentLength(-1)
       {
-		  Common::Log::GetLogInst() << "HttpRequestHeader " << resource << std::endl;
+		  // Common::Log::GetLogInst() << "HttpRequestHeader " << Resource << std::endl;
       }
       
       HttpRequestHeader::Method HttpRequestHeader::GetMethod() const

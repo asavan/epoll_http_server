@@ -21,7 +21,7 @@ namespace Network
   {
 	  task_ = NULL;
 	  selectTask_ = NULL;
-	  Common::Log::GetLogInst() << "Selector wait to die " << threadLoop.getId() << " " << ePollSelector_.getEpollId() << std::endl;
+	  // Common::Log::GetLogInst() << "Selector wait to die " << threadLoop.getId() << " " << ePollSelector_.getEpollId() << std::endl;
   }
 
   void SelectorThread::AddSocket(SocketHandle handle, int selectType)
@@ -49,7 +49,7 @@ namespace Network
     }
     catch (const std::exception &e)
     {
-      Common::Log::GetLogInst() << e.what();
+		Common::Log::GetLogInst() << e.what() << std::endl;
     }
   }    
 }

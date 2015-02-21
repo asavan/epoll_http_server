@@ -26,7 +26,7 @@ namespace Network
         
         static char const ContentLengthPrm[];
         
-        HttpRequestHeader(Method mtd, const std::string && resource);
+        HttpRequestHeader(Method mtd, const std::string& resource);
         
         Method GetMethod() const;
         const std::string & GetResource() const;

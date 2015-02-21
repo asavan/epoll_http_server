@@ -13,7 +13,7 @@ namespace Network
 
 	  void WorkerThread::onSelect(SocketHandle handle, SelectType selectType)
       {
-		  Common::Log::GetLogInst() << "onSelect WorkerThread " << std::this_thread::get_id() << std::endl;
+		  // Common::Log::GetLogInst() << "onSelect WorkerThread " << std::this_thread::get_id() << std::endl;
         try
         {
           auto Iter = Clients.find(handle);
@@ -59,7 +59,7 @@ namespace Network
         {
           for (ClientPool::iterator i = Clients.begin() ; i != Clients.end() ; )
           {
-			  Common::Log::GetLogInst() << "iterator " << i->first << " "<<std::this_thread::get_id() << std::endl;
+			  // Common::Log::GetLogInst() << "iterator " << i->first << " "<<std::this_thread::get_id() << std::endl;
             if (i->second->CanClose())
 			{
               RemoveClient(i++);
@@ -68,9 +68,9 @@ namespace Network
             {
               try
               {
-				  Common::Log::GetLogInst() << "iterator idle" << i->first << " "<<std::this_thread::get_id() << std::endl;
+				  // Common::Log::GetLogInst() << "iterator idle" << i->first << " "<<std::this_thread::get_id() << std::endl;
                 i->second->OnIdle();
-				Common::Log::GetLogInst() << "iterator idle end" << i->first << " "<<std::this_thread::get_id() << std::endl;
+				// Common::Log::GetLogInst() << "iterator idle end" << i->first << " "<<std::this_thread::get_id() << std::endl;
 				if (i->second->CanClose())
 				{
                   RemoveClient(i++);
@@ -96,7 +96,7 @@ namespace Network
 		  }
           		  	  
           std::unique_ptr<ClientItem> Client = AcceptedClients->pop();
-		  Common::Log::GetLogInst() << "pop " << Client->GetHandle()<< " " << std::this_thread::get_id() << std::endl;
+		  // Common::Log::GetLogInst() << "pop " << Client->GetHandle()<< " " << std::this_thread::get_id() << std::endl;
           if (!Client)
 		  {
 			Common::Log::GetLogInst() << "wrong client" << std::endl;
@@ -108,7 +108,7 @@ namespace Network
 		  // Clients.emplace(std::make_pair(h, std::move(Client)));
           // Clients[h].reset(Client.release());
 		  Clients[h] = std::move(Client);
-		  Common::Log::GetLogInst() << "moved to list " << h << " "<<std::this_thread::get_id() << std::endl;
+		  // Common::Log::GetLogInst() << "moved to list " << h << " "<<std::this_thread::get_id() << std::endl;
         }
         catch (const std::exception &e)
         {

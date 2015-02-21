@@ -20,7 +20,7 @@ namespace Network
   EPollSelector::~EPollSelector()
   {
     close(EPoll);
-	Common::Log::GetLogInst() << "epool closed " << getEpollId() << std::endl;
+	// Common::Log::GetLogInst() << "epool closed " << getEpollId() << std::endl;
   }
   
   void EPollSelector::AddSocket(SocketHandle handle, int selectType)
