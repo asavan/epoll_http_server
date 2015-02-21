@@ -13,62 +13,15 @@
 #include <map>
 #include <iostream>
 
+#include "listen_thread.h"
+
 namespace Network
 {
 
   namespace Private
   {
   
-	typedef Queue<std::unique_ptr<ClientItem>> ClientItemQueue;
-    typedef std::shared_ptr<ClientItemQueue> ClientItemQueuePtr;
-  
-    class ListenThread
-      : private TCPServerSocket
-      , public Common::IDisposable
-	  ,public ISelectable
-    {
-    public:
-      ListenThread(InetAddressPtr locAddr, int backlog,
-                   ClientItemQueuePtr acceptedClients,
-                   const std::string& rootDir, const std::string& defaultPage, bool useCorking)
-				   : TCPServerSocket(std::move(locAddr), backlog)
-        , AcceptedClients(acceptedClients)
-        // , SessionCreator(sessionCreator)
-        , Selector(1, WaitTimeout, this),
-			RootDir(rootDir), DefaultPage(defaultPage), UseCorking(useCorking)
-      {
-        Selector.AddSocket(GetHandle(), stRead);
-      }
 
-	  void onSelect(SocketHandle handle, SelectType selectType)
-      {
-		  Common::Log::GetLogInst() << "onSelect ListenThread " << std::this_thread::get_id() << std::endl;
-        try
-        {
-          sockaddr Addr = { 0 };
-          socklen_t AddrSize = sizeof(Addr);
-                    
-		  SocketHolderPtr holder = Accept(true, &Addr, &AddrSize);
-          ClientItemPtr Client(new ClientItem(std::move(holder),
-            Network::Proto::Http::CreateHttpUserSession(RootDir, DefaultPage, UseCorking)));
-            
-          AcceptedClients->push(std::move(Client));
-        }
-        catch (const std::exception &e)
-        {
-          Common::Log::GetLogInst() << __LINE__ << e.what() << std::endl;
-        }
-      }
-      
-    private:
-		enum { WaitTimeout = 20 };
-		ClientItemQueuePtr AcceptedClients;
-		SelectorThread Selector;
-
-		std::string RootDir;
-		std::string DefaultPage;
-		bool UseCorking;
-    };
   
     class WorkerThread
       : private Common::NonCopyable
@@ -216,7 +169,7 @@ namespace Network
   TCPServer::TCPServer(InetAddressPtr locAddr, int backlog, int maxThreadsCount,
 	  int maxConnectionsCount, const std::string& rootDir, const std::string& defaultPage, bool useCorking)
   {
-	Private::ClientItemQueuePtr AcceptedItems(new Private::ClientItemQueue(backlog));
+	ClientItemQueuePtr AcceptedItems(new ClientItemQueue(backlog));
     int EventsCount = maxConnectionsCount / maxThreadsCount;
     for (int i = 0 ; i < maxThreadsCount ; ++i)
     {
@@ -228,7 +181,7 @@ namespace Network
 	  }
       Threads.push_back(IDisposablePtr(new Private::WorkerThread(maxEventsCount, AcceptedItems)));
     }
-	Threads.push_back(IDisposablePtr(new Private::ListenThread(std::move(locAddr), backlog, AcceptedItems, rootDir, defaultPage, useCorking)));
+	Threads.push_back(IDisposablePtr(new ListenThread(std::move(locAddr), backlog, AcceptedItems, rootDir, defaultPage, useCorking)));
   }
 
 }

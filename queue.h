@@ -5,8 +5,8 @@
 #include <mutex>
 
 #include <queue>
-
 #include <memory>
+#include <iostream>
 
 namespace Network
 {
@@ -24,6 +24,11 @@ namespace Network
       : MaxItemsCount(maxItemsCount)
     {
     }
+
+	~Queue()
+	 {
+		 std::cout << "queue destory" << std::endl;
+	 }
     void push(std::unique_ptr<T> item)
     {
       LockGuard Lock(Guard);

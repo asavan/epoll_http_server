@@ -16,6 +16,7 @@ set(SOURCES_LIB client_item.cpp
 	inet_address.cpp
 	inet_address_v4.cpp
 	io_helper.cpp
+	listen_thread.cpp
 	logger.cpp
 	selector_thread.cpp
 	socket.cpp
@@ -47,6 +48,7 @@ SET( HEADERS client_item.h
 	io_helper.h
 	iselector.h
 	iuser_session.h
+	listen_thread.h
 	logger.h
 	non_copyable.h
 	queue.h

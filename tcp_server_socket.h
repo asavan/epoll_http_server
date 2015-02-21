@@ -8,7 +8,7 @@ namespace Network
 {
 
   class TCPServerSocket
-    : protected Socket
+    : public Socket
   {
   public:
     TCPServerSocket(InetAddressPtr locAddr, int backlog);
