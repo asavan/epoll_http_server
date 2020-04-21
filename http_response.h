@@ -67,12 +67,12 @@ namespace Network
         typedef std::vector<char> CharBuffer;
         CharBuffer Buffer;
         
-        void CreateResponseHeader(std::string *response) const;
+        std::string  CreateResponseHeader_() const;
         static char const* GetStatusDescription(HttpStatusCode status);
         static std::string GetDateTime();
         static char const* GetConnectionType(ConnectionType type);
         static char const* GetContentType(const std::string &fileName);
-        static void CreateErrorPage(HttpStatusCode code, const std::string &description, std::string *page);
+        static std::string CreateErrorPage(HttpStatusCode code, const std::string &description);
       };
       
     }

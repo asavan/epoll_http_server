@@ -4,24 +4,23 @@
 #include "http_user_session.h"
 
 
-namespace Network
-{
+namespace Network {
 
 ListenThread::ListenThread(InetAddressPtr locAddr, int backlog,
-                   ClientItemQueuePtr acceptedClients,
-                   const std::string& rootDir, const std::string& defaultPage, bool useCorking)
-				   : TCPServerSocket_(std::move(locAddr), backlog)
-        , AcceptedClients(acceptedClients)
-        , Selector(1, WaitTimeout, this),
-			RootDir(rootDir), DefaultPage(defaultPage), UseCorking(useCorking)
-      {
-        Selector.AddSocket(TCPServerSocket_.GetHandle(), stRead);
-      }
+    ClientItemQueuePtr acceptedClients,
+    const std::string& rootDir, const std::string& defaultPage, bool useCorking)
+    : TCPServerSocket_(std::move(locAddr), backlog)
+    , AcceptedClients(acceptedClients)
+    , Selector(1, WaitTimeout, this),
+    RootDir(rootDir), DefaultPage(defaultPage), UseCorking(useCorking)
+{
+    Selector.AddSocket(TCPServerSocket_.GetHandle(), stRead);
+}
 
-void ListenThread::Start() 
-	  {
-		Selector.Start();
-	  }
+void ListenThread::Start()
+{
+    Selector.Start();
+}
 
 void ListenThread::onSelect(SocketHandle /*handle*/, SelectType /*selectType*/)
 {

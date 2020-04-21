@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <errno.h>
 #include <sys/sendfile.h>
+#include <unistd.h>
 // #include <cstdio>    // BUFSIZ
 
 namespace Network

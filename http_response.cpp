@@ -8,6 +8,7 @@
 #include <iomanip>
 
 #include <string.h>
+// #include <ctime>
 
 namespace Network
 {
@@ -38,8 +39,9 @@ namespace Network
       bool HttpResponse::Send()
       {
 		  // Common::Log::GetLogInst() << "send begin" << std::endl;
-        if (Buffer.empty())
-          return false;
+        if (Buffer.empty()) {
+            return false;
+        }
         unsigned Bytes = Buffer.size();
         while (Bytes && Ctrl->SendData(&Buffer[0], &Bytes))
         {
@@ -56,8 +58,7 @@ namespace Network
       
       void HttpResponse::CreateResponseHeader()
       {
-        std::string ResponseHeader;
-        CreateResponseHeader(&ResponseHeader);
+        std::string ResponseHeader = CreateResponseHeader_();
         CharBuffer().swap(Buffer);
         Buffer.resize(ResponseHeader.length());
         memcpy(&Buffer[0], ResponseHeader.c_str(), ResponseHeader.length());
@@ -83,13 +84,13 @@ namespace Network
         ResourceName = resourceName;
       }
       
-      void HttpResponse::CreateResponseHeader(std::string *response) const
+      std::string HttpResponse::CreateResponseHeader_() const
       {
 
         std::string ErrorPage;
         if (Status != statOK)
         {
-          CreateErrorPage(Status, GetStatusDescription(Status), &ErrorPage);
+          ErrorPage = CreateErrorPage(Status, GetStatusDescription(Status));
           ContentLength = ErrorPage.length();
           ResourceName = "error.html";
         }
@@ -101,9 +102,11 @@ namespace Network
           << ContentLengthPrm << " " << ContentLength << EndLine
           << ConnectionPrm << " " << GetConnectionType(Connection) << EndLine
           << ContentTypePrm << " " << GetContentType(ResourceName) << EndHeader;
-        *response = Stream.str();
-        if (!ErrorPage.empty())
-          *response += ErrorPage;
+        std::string response = Stream.str();
+        if (!ErrorPage.empty()) {
+            response += ErrorPage;
+        }
+        return response;
       }
       
       char const* HttpResponse::GetStatusDescription(HttpStatusCode status)
@@ -155,6 +158,7 @@ namespace Network
           << ":"
           << std::setw(2) << std::setfill('0') << CurDT.tm_sec
           << " GMT";
+        // Stream << std::put_time(&CurDT, "%c %Z");
         return Stream.str();
       }
       
@@ -187,7 +191,7 @@ namespace Network
         return "*/*";
       }
       
-      void HttpResponse::CreateErrorPage(HttpStatusCode code, std::string const &description, std::string *page)
+      std::string HttpResponse::CreateErrorPage(HttpStatusCode code, std::string const &description)
       {
         std::stringstream Stream;
         Stream
@@ -201,7 +205,7 @@ namespace Network
             <<      "</h1>"
             <<    "</body>"
             <<  "</html>";
-        *page = Stream.str();
+        return Stream.str();
       }
       
       char const HttpResponse::HttpVersion[] = "HTTP/1.1";
