@@ -1,3 +1,6 @@
+#ifndef __QUEUE_BLOCK_H__
+#define __QUEUE_BLOCK_H__
+
 #include "non_copyable.h"
 
 #include <queue>
@@ -67,3 +70,4 @@ class Queue : public Common::NonCopyable
   std::condition_variable cond_;
   int maxItemsCount_;
 };
+#endif // __QUEUE_BLOCK_H__

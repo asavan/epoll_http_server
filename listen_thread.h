@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __LISTEN_THREAD_H__
+#define __LISTEN_THREAD_H__
 
 // #include "queueBlock.h"
 #include "queue.h"
@@ -36,3 +37,4 @@ namespace Network
 		bool UseCorking;
     };
 }
+#endif // __LISTEN_THREAD_H__

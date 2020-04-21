@@ -1,6 +1,5 @@
 #include "http_request_header.h"
 #include "logger.h"
-#include <stdlib.h>
 
 namespace Network
 {

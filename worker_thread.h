@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __WORKER_THREAD_H__
+#define __WORKER_THREAD_H__
+
 #include "listen_thread.h"
 #include <map>
 #include <memory>
@@ -34,3 +36,4 @@ class WorkerThread
       void RemoveClient(ClientPool::const_iterator iter);
     };
 }
+#endif // __WORKER_THREAD_H__

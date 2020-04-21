@@ -1,6 +1,6 @@
 #include "command_line.h"
 #include "exceptions.h"
-#include <string.h>
+#include <cstring>
 
 namespace Common
 {
@@ -14,7 +14,7 @@ namespace Common
     ProgramName = argv[0];
     for (int i = 1 ; i < argc ; ++i)
     {
-      char const *Delimiter = strstr(argv[i], ":");
+      char const *Delimiter = strchr(argv[i], ':');
       if (!Delimiter)
         throw CommandLineException("Invalid parameter");
       Params[std::string(argv[i], Delimiter - argv[i])] = Delimiter + 1;

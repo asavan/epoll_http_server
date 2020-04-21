@@ -7,9 +7,6 @@
 #include <sstream>
 #include <iomanip>
 
-#include <string.h>
-// #include <ctime>
-
 namespace Network
 {
   
@@ -59,9 +56,7 @@ namespace Network
       void HttpResponse::CreateResponseHeader()
       {
         std::string ResponseHeader = CreateResponseHeader_();
-        CharBuffer().swap(Buffer);
-        Buffer.resize(ResponseHeader.length());
-        memcpy(&Buffer[0], ResponseHeader.c_str(), ResponseHeader.length());
+        Buffer = CharBuffer(ResponseHeader.begin(), ResponseHeader.end());
       }
       
       void HttpResponse::SetStatusCode(HttpStatusCode status)
@@ -260,8 +255,10 @@ namespace Network
         {"aif", "audio/x-aiff"},
         {"aiff", "audio/x-aiff"},
         {"aifc", "audio/x-aiff"},
+        {"mp3", "audio/mp3"},
         {"wav", "audio/x-wav"},
         {"gif", "image/gif"},
+        {"ico", "image/vnd.microsoft.icon" },
         {"ief", "image/ief"},
         {"jpeg", "image/jpeg"},
         {"jpg", "image/jpeg"},
@@ -279,6 +276,7 @@ namespace Network
         {"xbm", "image/x-xbitmap"},
         {"xpm", "image/x-xpixmap"},
         {"xwd", "image/x-xwindowdump"},
+        {"css", "text/css"},
         {"html", "text/html"},
         {"txt", "text/plain"},
         {"rtx", "text/richtext"},
