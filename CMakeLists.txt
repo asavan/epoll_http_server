@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 project(epoll_project)
 
-SET(CMAKE_CXX_FLAGS "-O3 -std=c++0x -Wall -Wextra -pedantic")
+# SET(CMAKE_CXX_FLAGS "-O3 -std=c++0x -Wall -Wextra -pedantic")
 
 set(SOURCES_LIB client_item.cpp
 	command_line.cpp
@@ -66,7 +66,7 @@ SET( HEADERS client_item.h
 )
 add_library(epolllib STATIC ${SOURCES_LIB} ${HEADERS})
 add_executable(web_server ${SOURCES_MAIN})
-set_property(TARGET web_server PROPERTY CXX_STANDARD 20)
+set_property(TARGET web_server PROPERTY CXX_STANDARD 17)
 file(COPY run.sh DESTINATION ./)
 
-target_link_libraries(web_server epolllib)
+target_link_libraries(web_server epolllib pthread)

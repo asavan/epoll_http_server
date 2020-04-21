@@ -31,6 +31,6 @@ class WorkerThread
       SelectorThread Selector;
       
       void OnIdle();      
-      void RemoveClient(ClientPool::iterator iter);
+      void RemoveClient(ClientPool::const_iterator iter);
     };
 }

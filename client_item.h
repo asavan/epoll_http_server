@@ -29,11 +29,11 @@ namespace Network
 	SocketHandle GetHandle() const;
     
     // IConnectionCtrl
-    virtual void MarkMeForClose();
-    virtual void UpdateSessionTime();
-    virtual bool SendData(void const *buf, unsigned *bytes);
-    virtual bool SendFile(int fileHandle, unsigned offset, unsigned *bytes);
-    virtual SocketTuner GetSocketTuner() const;
+    void MarkMeForClose() override;
+    void UpdateSessionTime() override;
+    bool SendData(void const *buf, unsigned *bytes) override;
+    bool SendFile(int fileHandle, unsigned offset, unsigned *bytes) override;
+    SocketTuner GetSocketTuner() const override;
     
   private:
 	SocketHolderPtr holder_;
