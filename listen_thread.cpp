@@ -27,7 +27,7 @@ void ListenThread::onSelect(SocketHandle /*handle*/, SelectType /*selectType*/)
 	// Common::Log::GetLogInst() << "onSelect ListenThread " << std::this_thread::get_id() << std::endl;
 	try
 	{
-		sockaddr Addr = { 0 };
+		sockaddr Addr = {};
 		socklen_t AddrSize = sizeof(Addr);		        
 		AcceptedClients->push(std::unique_ptr<ClientItem>(new ClientItem(TCPServerSocket_.Accept(true, &Addr, &AddrSize),
 		Network::Proto::Http::CreateHttpUserSession(RootDir, DefaultPage, UseCorking))));

@@ -25,7 +25,7 @@ namespace Network
   
   void EPollSelector::AddSocket(SocketHandle handle, int selectType)
   {
-    epoll_event Event = { 0 };
+    epoll_event Event = {};
     Event.data.fd = handle;
     Event.events = GetSelectFlags(selectType);
     if (epoll_ctl(EPoll, EPOLL_CTL_ADD, handle, &Event) == -1)

@@ -30,31 +30,31 @@ namespace Network
         
       private:
         static char const EndHeader[];
-        static unsigned const EndHeaderLen;
+        static size_t const EndHeaderLen;
         static char const EndLine[];
-        static unsigned const EndLineLen;
+        static size_t const EndLineLen;
         static char const HttpMtdGet[];
-        static unsigned const HttpMtdGetLen;
+        static size_t const HttpMtdGetLen;
         static char const HttpMtdHead[];
-        static unsigned const HttpMtdHeadLen;
+        static size_t const HttpMtdHeadLen;
         static char const HttpVersion10[];
-        static unsigned const HttpVersion10Len;
+        static size_t const HttpVersion10Len;
         static char const HttpVersion11[];
-        static unsigned const HttpVersion11Len;
+        static size_t const HttpVersion11Len;
         
         typedef std::vector<char> CharBuffer;
         CharBuffer Buffer;
-        unsigned LastEndHeaderPos;
+        size_t LastEndHeaderPos;
         std::unique_ptr<HttpRequestHeader> Header;
         
-        void ProcessHeader(char const *header, unsigned bytes);        
-        bool GetHeaderLine(char const *str, unsigned strLen, unsigned *endOfLineIndex);        
-        std::unique_ptr<HttpRequestHeader> ExtractRequestMethod(char const *str, unsigned len);        
-        void ExtractRequestParams(char const *str, unsigned len, HttpRequestHeader *header);        
+        void ProcessHeader(char const *header, size_t bytes);        
+        bool GetHeaderLine(char const *str, size_t strLen, size_t *endOfLineIndex);
+        std::unique_ptr<HttpRequestHeader> ExtractRequestMethod(char const *str, size_t len);
+        void ExtractRequestParams(char const *str, size_t len, HttpRequestHeader *header);
         void ProcessRequest();
         
       protected:
-        virtual void ProcessRequest(HttpRequestHeader const &header, void const *buf, unsigned bytes);
+        virtual void ProcessRequest(HttpRequestHeader const &header, void const *buf, size_t bytes) = 0;
       };
         
     }

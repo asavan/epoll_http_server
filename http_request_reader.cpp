@@ -1,5 +1,6 @@
 #include "http_request_reader.h"
 #include "exceptions.h"
+#include <iterator>
 #include <memory>
 #include <cstring>
 
@@ -36,7 +37,7 @@ namespace Network
           return;
         }
         
-        unsigned CurBufSize = Buffer.size();
+        size_t CurBufSize = Buffer.size();
         for (char const *p = &Buffer[LastEndHeaderPos] ; p != &Buffer[CurBufSize - EndHeaderLen + 1] ; ++p)
         {
           if (!strncmp(p, EndHeader, EndHeaderLen))
@@ -56,9 +57,9 @@ namespace Network
         LastEndHeaderPos = Buffer.size() - EndHeaderLen;
       }
       
-      void HttpRequestReader::ProcessHeader(char const *header, unsigned bytes)
+      void HttpRequestReader::ProcessHeader(char const *header, size_t bytes)
       {
-        unsigned index = 0, pos = 0;
+        size_t index = 0, pos = 0;
         if (!GetHeaderLine(&header[pos], bytes - pos, &index))
           throw HttpRequestReaderException("Invalid http request", statBadRequest);
         std::unique_ptr<HttpRequestHeader> NewHeader = ExtractRequestMethod(&header[pos], index);
@@ -68,11 +69,11 @@ namespace Network
         ProcessRequest();
       }
       
-      bool HttpRequestReader::GetHeaderLine(char const *str, unsigned strLen, unsigned *endOfLineIndex)
+      bool HttpRequestReader::GetHeaderLine(char const *str, size_t strLen, size_t *endOfLineIndex)
       {
         if (strLen < EndLineLen)
           return false;
-        for (char const *p = str ; static_cast<unsigned>(p - str) < strLen - EndLineLen ; ++p)
+        for (char const *p = str; p + EndLineLen < str + strLen; ++p)
         {
           if (!strncmp(p, EndLine, EndLineLen))
           {
@@ -83,18 +84,18 @@ namespace Network
         return false;
       }
       
-      std::unique_ptr<HttpRequestHeader> HttpRequestReader::ExtractRequestMethod(char const *str, unsigned len)
+      std::unique_ptr<HttpRequestHeader> HttpRequestReader::ExtractRequestMethod(char const *str, size_t len)
       {
         struct
         {
-          void operator () (const char *&str, unsigned &len) const
+          void operator () (const char *&str, size_t& len) const
           {
             for ( ; len && (*str == ' ' || *str == '\t') && --len ; ++str);
           }
         } SkipDelimiters;
         struct
         {
-          bool operator () (const char *str, unsigned len, unsigned *eol) const
+          bool operator () (const char *str, size_t len, size_t *eol) const
           {
             for (unsigned i = 0 ; i < len ; ++i)
             {
@@ -108,7 +109,7 @@ namespace Network
           }
         } GetWord;
         SkipDelimiters(str, len);
-        unsigned EoL = 0;
+        size_t EoL = 0;
         if (!GetWord(str, len, &EoL))
           throw HttpRequestReaderException("Failed to extract request method", statMethodNotAllowed);
         HttpRequestHeader::Method Mtd;
@@ -139,9 +140,9 @@ namespace Network
         return header;
       }
       
-      void HttpRequestReader::ExtractRequestParams(char const *str, unsigned len, HttpRequestHeader *header)
+      void HttpRequestReader::ExtractRequestParams(char const *str, size_t len, HttpRequestHeader *header)
       {
-        unsigned DelimiterPos = 0;
+        size_t DelimiterPos = 0;
         
         for ( ; str[DelimiterPos] != ' ' && str[DelimiterPos] != '\t' &&
               DelimiterPos < len ; ++DelimiterPos);
@@ -174,23 +175,19 @@ namespace Network
           Header.reset();
         }
       }
-      
-      void HttpRequestReader::ProcessRequest(HttpRequestHeader const &header, void const *buf, unsigned bytes)
-      {
-      }
 
       char const HttpRequestReader::EndHeader[] = "\r\n\r\n";
-      unsigned const HttpRequestReader::EndHeaderLen = Common::SizeOfArray(EndHeader) - 1;
+      size_t const HttpRequestReader::EndHeaderLen = Common::SizeOfArray(EndHeader) - 1;
       char const HttpRequestReader::EndLine[] = "\r\n";
-      unsigned const HttpRequestReader::EndLineLen = Common::SizeOfArray(EndLine) - 1;
+      size_t const HttpRequestReader::EndLineLen = Common::SizeOfArray(EndLine) - 1;
       char const HttpRequestReader::HttpMtdGet[] = "GET";
-      unsigned const HttpRequestReader::HttpMtdGetLen = Common::SizeOfArray(HttpMtdGet) - 1;
+      size_t const HttpRequestReader::HttpMtdGetLen = Common::SizeOfArray(HttpMtdGet) - 1;
       char const HttpRequestReader::HttpMtdHead[] = "HEAD";
-      unsigned const HttpRequestReader::HttpMtdHeadLen = Common::SizeOfArray(HttpMtdHead) - 1;
+      size_t const HttpRequestReader::HttpMtdHeadLen = Common::SizeOfArray(HttpMtdHead) - 1;
       char const HttpRequestReader::HttpVersion10[] = "HTTP/1.0";
-      unsigned const HttpRequestReader::HttpVersion10Len = Common::SizeOfArray(HttpVersion10) - 1;
+      size_t const HttpRequestReader::HttpVersion10Len = Common::SizeOfArray(HttpVersion10) - 1;
       char const HttpRequestReader::HttpVersion11[] = "HTTP/1.1";
-      unsigned const HttpRequestReader::HttpVersion11Len = Common::SizeOfArray(HttpVersion11) - 1;
+      size_t const HttpRequestReader::HttpVersion11Len = Common::SizeOfArray(HttpVersion11) - 1;
       
     }
     

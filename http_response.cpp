@@ -134,7 +134,7 @@ namespace Network
       
       std::string HttpResponse::GetDateTime()
       {
-        tm CurDT = { 0 };
+        tm CurDT = {};
         time_t CurTime = time(0);
         gmtime_r(&CurTime, &CurDT);
         std::stringstream Stream;

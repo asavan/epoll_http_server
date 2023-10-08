@@ -8,7 +8,7 @@ namespace Network
   
   InetAddressPtr InetAddressV4::CreateFromString(const std::string &addr, unsigned short port)
   {
-    sockaddr_in SockAddr = { 0 };
+    sockaddr_in SockAddr = {};
     SockAddr.sin_family = AF_INET;
     SockAddr.sin_addr.s_addr = inet_addr(addr.c_str());
     SockAddr.sin_port = htons(port);

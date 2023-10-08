@@ -31,13 +31,13 @@ namespace Network
         virtual unsigned GetMaxBufSizeForRead() const;
         virtual void OnRecvData(void const *buf, unsigned bytes);
         virtual void OnIdle();
-        virtual void ProcessRequest(const HttpRequestHeader &header, void const *buf, unsigned bytes);
+        virtual void ProcessRequest(const HttpRequestHeader &header, void const *buf, size_t bytes) override;
 	  protected:
 		virtual bool IsExpiredSession(std::time_t lastActionTime) const;
         
       private:
         enum { MaxBufSizeForRead = 4096 };
-        enum { SessionTimeout = 3 };
+        const double SessionTimeout = 3.0; // 3s
         IConnectionCtrl *Ctrl;
         std::string RootDir;
         std::string DefaultPage;

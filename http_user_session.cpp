@@ -112,7 +112,7 @@ namespace Network
         }
       }
       
-      void HttpUserSession::ProcessRequest(const HttpRequestHeader &header, void const *buf, unsigned bytes)
+      void HttpUserSession::ProcessRequest(const HttpRequestHeader &header, void const *, size_t)
       {
 		  // Common::Log::GetLogInst() << "Process" << std::endl;
         switch (header.GetMethod())

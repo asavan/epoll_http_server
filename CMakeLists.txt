@@ -1,7 +1,17 @@
-cmake_minimum_required(VERSION 3.10)
-project(epoll_project)
+cmake_minimum_required(VERSION 3.22)
 
-# SET(CMAKE_CXX_FLAGS "-O3 -std=c++0x -Wall -Wextra -pedantic")
+get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+string(REPLACE " " "_" ProjectId ${ProjectId})
+project(${ProjectId})
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
+
+if (MSVC)
+    add_compile_options(/W4 /WX)
+else()
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
 
 set(SOURCES_LIB client_item.cpp
 	command_line.cpp
@@ -64,9 +74,13 @@ SET( HEADERS client_item.h
 	types.h
 	worker_thread.h
 )
+
 add_library(epolllib STATIC ${SOURCES_LIB} ${HEADERS})
+
 add_executable(web_server ${SOURCES_MAIN})
-set_property(TARGET web_server PROPERTY CXX_STANDARD 17)
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT web_server)
+
 file(COPY run.sh DESTINATION ./)
 
 target_link_libraries(web_server epolllib pthread)

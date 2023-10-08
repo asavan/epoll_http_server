@@ -10,16 +10,6 @@
 
 namespace Network
 {
-	static int simpleSendFile(int source, int dest, unsigned *bytes)
-	{
-	char buf[BUFSIZ];
-	size_t size = 0;
-    while ((size = read(source, buf, BUFSIZ)) > 0) {
-        write(dest, buf, size);
-		*bytes += size;
-    }
-	return size;
-	}
 
   DECLARE_RUNTIME_EXCEPTION(IOHelper)
 
